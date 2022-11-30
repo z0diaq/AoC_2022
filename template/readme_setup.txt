@@ -7,7 +7,7 @@ To create new project
 - profit!
 
 prepare solution
-- modify main - add known test value for part 1
-- prepare solution for part 1
-- repeat above for part 2
-- profit!
+- modify main - need only to update module name and namespace import
+- fill data files with correct contents
+ - sample_input_(abc).txt contains any input from examples
+ - sample_input_(abc)_result_part(12).txt contains expected results from examples
