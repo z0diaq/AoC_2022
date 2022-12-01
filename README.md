@@ -8,3 +8,5 @@ more for practicing features from latest standards (i.e. modules from C++20, std
 Code comments and solutions improvements are welcomed!
 
 info: tried using cmake and Visual Studio 2022 integration but failed with builds couldn't find modules' definitions - probably could make this work but with much effort... other time then, or if someone could help I'd apprecaite!'
+
+setup instructions in template\readme_setup.txt
