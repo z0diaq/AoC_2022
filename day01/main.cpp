@@ -1,8 +1,8 @@
-import aoc_template;
+import calorie_counting;
 
 #include <compare>
 
 int main( )
 {
-	auto resultPart1 = aoc_template::Result( ).Execute( );
+	auto resultPart1 = calorie_counting::Result( ).Execute( );
 }

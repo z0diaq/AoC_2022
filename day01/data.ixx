@@ -1,28 +1,34 @@
 module;
 
 #include <string>
+#include <boost/lexical_cast.hpp>
 
-export module aoc_template:data;
+export module calorie_counting:data;
 
 export import AoC;
 
-export namespace aoc_template
+export namespace calorie_counting
 {
-    struct Data : public AoC::Data
-    {
-        virtual void Process( const std::string& line ) override;
-        virtual void Reset( ) override;
-    };
+	struct Data : public AoC::Data
+	{
+		uint32_t m_calories;
+
+		virtual void Process( const std::string& line ) override;
+		virtual void Reset( ) override;
+	};
 }
 
-using namespace aoc_template;
+using namespace calorie_counting;
 
 void
 Data::Process( const std::string& line )
 {
+	if( false == line.empty( ) )
+		m_calories = boost::lexical_cast< uint32_t >( line );
 }
 
 void
 Data::Reset( )
 {
+	m_calories = 0;
 }

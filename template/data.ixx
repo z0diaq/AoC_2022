@@ -2,20 +2,20 @@ module;
 
 #include <string>
 
-export module aoc_template:data;
+export module calorie_counting:data;
 
 export import AoC;
 
-export namespace aoc_template
+export namespace calorie_counting
 {
-    struct Data : public AoC::Data
-    {
-        virtual void Process( const std::string& line ) override;
-        virtual void Reset( ) override;
-    };
+	struct Data : public AoC::Data
+	{
+		virtual void Process( const std::string& line ) override;
+		virtual void Reset( ) override;
+	};
 }
 
-using namespace aoc_template;
+using namespace calorie_counting;
 
 void
 Data::Process( const std::string& line )

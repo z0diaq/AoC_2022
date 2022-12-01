@@ -1,13 +1,11 @@
 module;
 
-//imports
 #include <iostream>
 
 export module aoc_template;
 
 export import :data;
 
-//smoke => SEvent SEgments SEarch
 export namespace aoc_template
 {
 	class Result : public AoC::Result
