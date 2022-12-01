@@ -19,8 +19,6 @@ export namespace calorie_counting
 
 		virtual void Init( ) override;
 		virtual bool ProcessGeneral( const AoC::DataPtr& data ) override;
-		virtual bool ProcessOne( const AoC::DataPtr& data ) override;
-		virtual bool ProcessTwo( const AoC::DataPtr& data ) override;
 		virtual uint64_t Finish( ) const override;
 		virtual void Teardown( ) override;
 
@@ -65,18 +63,6 @@ Result::ProcessGeneral( const AoC::DataPtr& data )
 	else
 		m_caloriesSumsPerElf.push_back( 0u );
 
-	return true;//drop data, we used all
-}
-
-bool
-Result::ProcessOne( const AoC::DataPtr& data )
-{
-	return true;//drop data, we used all
-}
-
-bool
-Result::ProcessTwo( const AoC::DataPtr& data )
-{
 	return true;//drop data, we used all
 }
 
