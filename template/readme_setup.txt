@@ -1,5 +1,7 @@
 PLEASE READ TILL END (very important info at the end)
 
+don't put input publicly with solutions -> https://www.reddit.com/r/adventofcode/wiki/faqs/copyright/inputs/
+
 Required setup:
 - some projects rely on boost libraries so You need to setup them first
 - go to boost.org and download latest zip/7z - as of current day it is 1.80.0

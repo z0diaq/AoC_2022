@@ -146,8 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />
-    <Text Include="input_private.txt" />
-    <Text Include="input_private_result.txt" />
     <Text Include="input_result_part1.txt" />
     <Text Include="input_result_part2.txt" />
     <Text Include="readme_setup.txt" />
