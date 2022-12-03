@@ -2,11 +2,11 @@ module;
 
 #include <string>
 
-export module calorie_counting:data;
+export module aoc_template:data;
 
 export import AoC;
 
-export namespace calorie_counting
+export namespace aoc_template
 {
 	struct Data : public AoC::Data
 	{
@@ -15,7 +15,7 @@ export namespace calorie_counting
 	};
 }
 
-using namespace calorie_counting;
+using namespace aoc_template;
 
 void
 Data::Process( const std::string& line )
