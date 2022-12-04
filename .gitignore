@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # make sure input files are not submitted
 input*.txt
+secret/

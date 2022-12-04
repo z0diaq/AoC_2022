@@ -128,12 +128,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\runner\runner.vcxproj">
-      <Project>{fa246ebe-67d7-4d2c-8e77-bb4030a9a354}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="data.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="result.ixx" />
   </ItemGroup>
@@ -141,6 +135,11 @@
     <Text Include="sample_input_a.txt" />
     <Text Include="sample_input_a_result_part1.txt" />
     <Text Include="sample_input_a_result_part2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AoC\AoC.vcxproj">
+      <Project>{c42e5183-12fa-4908-9e4a-740192cf506a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

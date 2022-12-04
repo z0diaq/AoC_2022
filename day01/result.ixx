@@ -4,10 +4,11 @@ module;
 #include <vector>
 #include <algorithm>
 
+#include <boost/lexical_cast.hpp>
+
 export module calorie_counting;
 
-export import :data;
-
+import AoC;
 
 export namespace calorie_counting
 {
@@ -15,83 +16,78 @@ export namespace calorie_counting
 	{
 
 	public:
-		Result( );
-
 		virtual void Init( ) override;
-		virtual bool ProcessGeneral( const AoC::DataPtr& data ) override;
-		virtual uint64_t Finish( ) const override;
+		virtual void ProcessOne( const std::string& data );
+		virtual void ProcessTwo( const std::string& data );
+		virtual uint64_t Finish( ) override;
 		virtual void Teardown( ) override;
 
 	private:
-		std::vector<uint32_t> m_caloriesSumsPerElf;
+		std::vector<uint64_t> m_caloriesSumsPerElf;
+
+		void ProcessGeneral( const std::string& line );
 
 		//part one section
-		virtual uint64_t FinishPartOne( ) const;
+		virtual uint64_t FinishPartOne( );
 
 		//part two section
-		virtual uint64_t FinishPartTwo( ) const;
+		virtual uint64_t FinishPartTwo( );
 	};
 }
 
 using namespace calorie_counting;
 
-Result::Result( )
-{
-}
-
 void
 Result::Init( )
 {
-	m_data.reset( new calorie_counting::Data( ) );
-	m_haveDedicatedProcessing = false;
 	m_caloriesSumsPerElf.resize( 1 );
 }
 
 void
 Result::Teardown( )
 {
-	m_data.reset( );
 	m_caloriesSumsPerElf.clear( );
 }
 
-bool
-Result::ProcessGeneral( const AoC::DataPtr& data )
+void
+Result::ProcessOne( const std::string& data )
 {
-	auto dataDerived = static_cast< calorie_counting::Data* >( data.get( ) );
-	if( dataDerived->m_calories )
-		m_caloriesSumsPerElf.back( ) += dataDerived->m_calories;
+	ProcessGeneral( data );
+}
+
+void
+Result::ProcessTwo( const std::string& data )
+{
+	ProcessGeneral( data );
+}
+
+void
+Result::ProcessGeneral( const std::string& data )
+{
+	if( false == data.empty( ) )
+		m_caloriesSumsPerElf.back( ) += boost::lexical_cast< uint64_t >( data );
 	else
 		m_caloriesSumsPerElf.push_back( 0u );
-
-	return true;//drop data, we used all
 }
 
 uint64_t
-Result::Finish( ) const
+Result::Finish( )
 {
-	const uint64_t result = IsPartOne( ) ? FinishPartOne( ) : FinishPartTwo( );
-	std::cout
-		<< "result = "
-		<< result
-		<< std::endl;
-
-	return result;
+	return IsPartOne( ) ? FinishPartOne( ) : FinishPartTwo( );
 }
 
 uint64_t
-Result::FinishPartOne( ) const
+Result::FinishPartOne( )
 {
-	auto dataCopy = m_caloriesSumsPerElf;
-	std::sort( dataCopy.begin( ), dataCopy.end( ) );
-	return dataCopy.back( );
+	std::sort( m_caloriesSumsPerElf.begin( ), m_caloriesSumsPerElf.end( ) );
+	return m_caloriesSumsPerElf.back( );
 }
 
 uint64_t
-Result::FinishPartTwo( ) const
+Result::FinishPartTwo( )
 {
-	auto dataCopy = m_caloriesSumsPerElf;
-	std::sort( dataCopy.begin( ), dataCopy.end( ) );
-	size_t count = dataCopy.size( );
+	std::sort( m_caloriesSumsPerElf.begin( ), m_caloriesSumsPerElf.end( ) );
+	size_t count = m_caloriesSumsPerElf.size( );
 
-	return dataCopy[ count - 1 ] + dataCopy[ count - 2 ] + dataCopy[ count - 3 ];
+	return m_caloriesSumsPerElf[ count - 1 ] + m_caloriesSumsPerElf[ count - 2 ] + m_caloriesSumsPerElf[ count - 3 ];
 }

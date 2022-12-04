@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{45673905-92ef-497d-95b8-11388de87f69}</ProjectGuid>
-    <RootNamespace>template</RootNamespace>
+    <ProjectGuid>{c42e5183-12fa-4908-9e4a-740192cf506a}</ProjectGuid>
+    <RootNamespace>AoC</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -135,24 +135,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="fsHelpers.ixx" />
+    <ClCompile Include="result.cpp" />
     <ClCompile Include="result.ixx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme_setup.txt" />
-    <Text Include="sample_input_a.txt" />
-    <Text Include="sample_input_a_result_part1.txt" />
-    <Text Include="sample_input_a_result_part2.txt" />
-    <Text Include="sample_input_b.txt" />
-    <Text Include="sample_input_b_result_part1.txt" />
-    <Text Include="sample_input_b_result_part2.txt" />
-    <Text Include="sample_input_c.txt" />
-    <Text Include="sample_input_c_result_part1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AoC\AoC.vcxproj">
-      <Project>{c42e5183-12fa-4908-9e4a-740192cf506a}</Project>
-    </ProjectReference>
+    <ClCompile Include="testData.cpp" />
+    <ClCompile Include="testData.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

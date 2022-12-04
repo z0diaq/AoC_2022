@@ -13,19 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{31e7b9e6-307e-48d6-8fd3-415711cc97c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="data.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="input.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="result.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="result.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme_setup.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_a.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_a_result_part1.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_a_result_part2.txt">
+      <Filter>data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

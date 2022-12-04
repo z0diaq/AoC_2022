@@ -5,43 +5,48 @@ module;
 
 export module rock_paper_scissors;
 
-export import :data;
+import AoC;
 
 export namespace rock_paper_scissors
 {
+	struct Guide
+	{
+		char m_opponentMove;
+		char m_ourMove;
+
+		bool operator==( const Guide& rhs ) const
+		{
+			return m_opponentMove == rhs.m_opponentMove &&
+				m_ourMove == rhs.m_ourMove;
+		}
+	};
+
 	class Result : public AoC::Result
 	{
 
 	public:
-		Result( );
-
 		virtual void Init( ) override;
-		virtual bool ProcessGeneral( const AoC::DataPtr& data ) override;
-		virtual uint64_t Finish( ) const override;
+		virtual void ProcessOne( const std::string& data ) { ProcessGeneral( data ); }
+		virtual void ProcessTwo( const std::string& data ) { ProcessGeneral( data ); }
+		virtual uint64_t Finish( ) override;
 		virtual void Teardown( ) override;
 
 	private:
 
-		std::array<Data::GuideEntry, 3> m_winConditions;
-		uint32_t                        m_totalPoints;
+		std::array<Guide, 3> m_winConditions;
+		uint32_t             m_totalPoints;
 
-		Data::GuideEntry DecodeGuide( const Data::GuideEntry& entry ) const;
-		uint32_t ComputeScore( Data::GuideEntry entry ) const;
+		void ProcessGeneral( const std::string& data );
+		Guide DecodeGuide( const Guide& guide ) const;
+		uint32_t ComputeScore( const Guide& guiide ) const;
 	};
 }
 
 using namespace rock_paper_scissors;
 
-Result::Result( )
-{
-}
-
 void
 Result::Init( )
 {
-	m_data.reset( new rock_paper_scissors::Data( ) );
-	m_haveDedicatedProcessing = false;
-
 	m_winConditions[ 0 ] = { 'A', 'B' };
 	m_winConditions[ 1 ] = { 'B', 'C' };
 	m_winConditions[ 2 ] = { 'C', 'A' };
@@ -52,38 +57,31 @@ Result::Init( )
 void
 Result::Teardown( )
 {
-	m_data.reset( );
 	m_totalPoints = 0;
 }
 
-bool
-Result::ProcessGeneral( const AoC::DataPtr& data )
+void
+Result::ProcessGeneral( const std::string& data )
 {
-	auto dataPtr = static_cast< Data* >( data.get( ) );
+	if( data.length( ) != 3 )
+		throw std::logic_error( "Unexpected length on input" );
 
-	m_totalPoints += ComputeScore( DecodeGuide( dataPtr->m_entry ) );
-
-	return true;//drop data, we used all
+	m_totalPoints += ComputeScore( DecodeGuide( { data[ 0 ], data[ 2 ] } ) );
 }
 
 uint64_t
-Result::Finish( ) const
+Result::Finish( )
 {
-	std::cout
-		<< "result = "
-		<< m_totalPoints
-		<< std::endl;
-
 	return m_totalPoints;
 }
 
-Data::GuideEntry
-Result::DecodeGuide( const Data::GuideEntry& entry ) const
+Guide
+Result::DecodeGuide( const Guide& guide ) const
 {
 	char decodedResponse;
 	if( IsPartOne( ) )
 	{
-		switch( entry.second )
+		switch( guide.m_ourMove )
 		{
 		case 'X':
 			decodedResponse = 'A';
@@ -98,34 +96,31 @@ Result::DecodeGuide( const Data::GuideEntry& entry ) const
 	}
 	else
 	{
-		//X - loose
-		//Y - draw
-		//Z - win
-		if( entry.second == 'Y' )
-			decodedResponse = entry.first;
-		else if( entry.second == 'Z' )
+		if( guide.m_ourMove == 'Y' )
+			decodedResponse = guide.m_opponentMove;
+		else if( guide.m_ourMove == 'Z' )
 		{
 			for( auto winEntry : m_winConditions )
-				if( winEntry.first == entry.first )
-					decodedResponse = winEntry.second;
+				if( winEntry.m_opponentMove == guide.m_opponentMove )
+					decodedResponse = winEntry.m_ourMove;
 		}
 		else
 		{
 			//loose condition - find entry in win conditions by matching 'response' part
 			for( auto winEntry : m_winConditions )
-				if( entry.first == winEntry.second )
-					decodedResponse = winEntry.first;
+				if( guide.m_opponentMove == winEntry.m_ourMove )
+					decodedResponse = winEntry.m_opponentMove;
 		}
 	}
 
-	return { entry.first, decodedResponse };
+	return { guide.m_opponentMove, decodedResponse };
 }
 
 uint32_t
-Result::ComputeScore( Data::GuideEntry entry ) const
+Result::ComputeScore( const Guide& guide ) const
 {
-	const bool isWin = ( std::find( m_winConditions.begin( ), m_winConditions.end( ), entry ) != m_winConditions.end( ) );
-	const bool isDraw = ( entry.first == entry.second );
+	const bool isWin = ( std::find( m_winConditions.begin( ), m_winConditions.end( ), guide ) != m_winConditions.end( ) );
+	const bool isDraw = ( guide.m_opponentMove == guide.m_ourMove );
 
 	uint32_t score = 0;
 
@@ -134,5 +129,5 @@ Result::ComputeScore( Data::GuideEntry entry ) const
 	else if( isDraw )
 		score = 3;
 
-	return score + ( entry.second - 'A' + 1 );
+	return score + ( guide.m_ourMove - 'A' + 1 );
 }

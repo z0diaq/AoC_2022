@@ -12,3 +12,8 @@ info: tried using cmake and Visual Studio 2022 integration but failed with build
 setup instructions in template\readme_setup.txt
 
 note: don't put input publicly with solutions -> https://www.reddit.com/r/adventofcode/wiki/faqs/copyright/inputs/
+
+personal goals:
+- source files not longer than 100 lines but easy to read
+- close to zero comments - code should describe itself
+- KISS - keep it stupid simple
