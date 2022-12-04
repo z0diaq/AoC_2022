@@ -24,12 +24,13 @@ export namespace rock_paper_scissors
 	class Result : public AoC::Result
 	{
 
-	public:
+	protected:
 		virtual void Init( ) override;
 		virtual void ProcessOne( const std::string& data ) { ProcessGeneral( data ); }
+		virtual uint64_t FinishPartOne( ) override { return FinishGeneral( ); }
 		virtual void ProcessTwo( const std::string& data ) { ProcessGeneral( data ); }
-		virtual uint64_t Finish( ) override;
-		virtual void Teardown( ) override;
+		virtual uint64_t FinishPartTwo( ) override { return FinishGeneral( ); }
+		virtual void Teardown( ) override { }
 
 	private:
 
@@ -37,97 +38,9 @@ export namespace rock_paper_scissors
 		uint32_t             m_totalPoints;
 
 		void ProcessGeneral( const std::string& data );
+		uint64_t FinishGeneral( ) const;
+
 		Guide DecodeGuide( const Guide& guide ) const;
 		uint32_t ComputeScore( const Guide& guiide ) const;
 	};
-}
-
-using namespace rock_paper_scissors;
-
-void
-Result::Init( )
-{
-	m_winConditions[ 0 ] = { 'A', 'B' };
-	m_winConditions[ 1 ] = { 'B', 'C' };
-	m_winConditions[ 2 ] = { 'C', 'A' };
-
-	m_totalPoints = 0;
-}
-
-void
-Result::Teardown( )
-{
-	m_totalPoints = 0;
-}
-
-void
-Result::ProcessGeneral( const std::string& data )
-{
-	if( data.length( ) != 3 )
-		throw std::logic_error( "Unexpected length on input" );
-
-	m_totalPoints += ComputeScore( DecodeGuide( { data[ 0 ], data[ 2 ] } ) );
-}
-
-uint64_t
-Result::Finish( )
-{
-	return m_totalPoints;
-}
-
-Guide
-Result::DecodeGuide( const Guide& guide ) const
-{
-	char decodedResponse;
-	if( IsPartOne( ) )
-	{
-		switch( guide.m_ourMove )
-		{
-		case 'X':
-			decodedResponse = 'A';
-			break;
-		case 'Y':
-			decodedResponse = 'B';
-			break;
-		case 'Z':
-			decodedResponse = 'C';
-			break;
-		}
-	}
-	else
-	{
-		if( guide.m_ourMove == 'Y' )
-			decodedResponse = guide.m_opponentMove;
-		else if( guide.m_ourMove == 'Z' )
-		{
-			for( auto winEntry : m_winConditions )
-				if( winEntry.m_opponentMove == guide.m_opponentMove )
-					decodedResponse = winEntry.m_ourMove;
-		}
-		else
-		{
-			//loose condition - find entry in win conditions by matching 'response' part
-			for( auto winEntry : m_winConditions )
-				if( guide.m_opponentMove == winEntry.m_ourMove )
-					decodedResponse = winEntry.m_opponentMove;
-		}
-	}
-
-	return { guide.m_opponentMove, decodedResponse };
-}
-
-uint32_t
-Result::ComputeScore( const Guide& guide ) const
-{
-	const bool isWin = ( std::find( m_winConditions.begin( ), m_winConditions.end( ), guide ) != m_winConditions.end( ) );
-	const bool isDraw = ( guide.m_opponentMove == guide.m_ourMove );
-
-	uint32_t score = 0;
-
-	if( isWin )
-		score = 6;
-	else if( isDraw )
-		score = 3;
-
-	return score + ( guide.m_ourMove - 'A' + 1 );
 }

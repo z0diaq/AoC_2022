@@ -9,15 +9,15 @@ import AoC;
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
-//using AoC::TestData;
 using AoC::TestData;
 
 std::string Normalize( std::string data );
 
-TestData::TestData( const std::string& filename, const std::string& dataTag )
+void
+TestData::Load( const std::string& filename, const std::string& dataTag )
 {
 	fs::path path;
-	
+
 	if( AoC::FindFileInPredefinedLocations( filename, path, dataTag ) )
 	{
 		try

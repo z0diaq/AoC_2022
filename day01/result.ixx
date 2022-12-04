@@ -15,23 +15,21 @@ export namespace calorie_counting
 	class Result : public AoC::Result
 	{
 
-	public:
+	protected:
 		virtual void Init( ) override;
-		virtual void ProcessOne( const std::string& data );
-		virtual void ProcessTwo( const std::string& data );
-		virtual uint64_t Finish( ) override;
+
+		virtual void ProcessOne( const std::string& data ) override;
+		virtual uint64_t FinishPartOne( ) override;
+
+		virtual void ProcessTwo( const std::string& data ) override;
+		virtual uint64_t FinishPartTwo( ) override;
+
 		virtual void Teardown( ) override;
 
 	private:
 		std::vector<uint64_t> m_caloriesSumsPerElf;
 
 		void ProcessGeneral( const std::string& line );
-
-		//part one section
-		virtual uint64_t FinishPartOne( );
-
-		//part two section
-		virtual uint64_t FinishPartTwo( );
 	};
 }
 
@@ -68,12 +66,6 @@ Result::ProcessGeneral( const std::string& data )
 		m_caloriesSumsPerElf.back( ) += boost::lexical_cast< uint64_t >( data );
 	else
 		m_caloriesSumsPerElf.push_back( 0u );
-}
-
-uint64_t
-Result::Finish( )
-{
-	return IsPartOne( ) ? FinishPartOne( ) : FinishPartTwo( );
 }
 
 uint64_t

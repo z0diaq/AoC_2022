@@ -17,13 +17,13 @@ export namespace AoC
 		uint64_t  m_expectedResultPart2 = 0;
 
 	public:
-		TestData( const std::string& filename, const std::string& dataTag );
+		void Load( const std::string& filename, const std::string& dataTag );
 
 		operator bool( )const
 		{
 			return false == m_data.empty( );
 		}
-		
+
 		const TestLines& Data( ) const
 		{
 			return m_data;
@@ -33,7 +33,7 @@ export namespace AoC
 		{
 			return m_expectedResultPart1;
 		}
-		
+
 		uint64_t ExpectedResultPart2( ) const
 		{
 			return m_expectedResultPart2;
