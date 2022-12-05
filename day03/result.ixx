@@ -15,9 +15,9 @@ export namespace rucksack_reorganization
 	protected:
 		virtual void Init( ) override;
 		virtual void ProcessOne( const std::string& data ) override;
-		virtual uint64_t FinishPartOne( ) override { return m_sum; }
+		virtual std::string FinishPartOne( ) override { return std::to_string( m_sum ); }
 		virtual void ProcessTwo( const std::string& data ) override;
-		virtual uint64_t FinishPartTwo( ) override { return m_sum; }
+		virtual std::string FinishPartTwo( ) override { return std::to_string( m_sum ); }
 		virtual void Teardown( ) override { }
 
 	private:

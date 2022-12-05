@@ -46,11 +46,11 @@ export namespace AoC
 
 		//part one section
 		virtual void ProcessOne( const std::string& data ) = 0;
-		virtual uint64_t FinishPartOne( ) = 0;
+		virtual std::string FinishPartOne( ) = 0;
 
 		//part two section
 		virtual void ProcessTwo( const std::string& data ) = 0;
-		virtual uint64_t FinishPartTwo( ) = 0;
+		virtual std::string FinishPartTwo( ) = 0;
 
 		virtual void Teardown( ) { };
 
@@ -62,10 +62,10 @@ export namespace AoC
 		double      m_resultPrepareSec;
 
 		bool ProcessFileIfExists( const std::string& filename );
-		unsigned long long InternalExecute( const TestLines& lines, bool isPartOne );
+		std::string InternalExecute( const TestLines& lines, bool isPartOne );
 		int CheckResult(
-			const uint64_t computed,
-			const uint64_t expected ) const;
+			const std::string& computed,
+			const std::string& expected ) const;
 
 		template<typename Function, typename... Args>
 		double Measure( Function&& toTime, Args&&... a )

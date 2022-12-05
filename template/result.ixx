@@ -18,10 +18,10 @@ export namespace aoc_template
 		virtual void Init( ) override;
 
 		virtual void ProcessOne( const std::string& data ) override;
-		virtual uint64_t FinishPartOne( ) override;
+		virtual std::string FinishPartOne( ) override;
 
 		virtual void ProcessTwo( const std::string& data ) override;
-		virtual uint64_t FinishPartTwo( ) override;
+		virtual std::string FinishPartTwo( ) override;
 
 		virtual void Teardown( ) override;
 

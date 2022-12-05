@@ -52,14 +52,14 @@ AoC::Result::ProcessFileIfExists( const std::string& filename )
 	return true;
 };
 
-uint64_t
+std::string
 AoC::Result::InternalExecute( const AoC::TestLines& lines, bool isPartOne )
 {
 	m_isPartOne = isPartOne;
 
 	std::cout << "\tPART " << ( m_isPartOne ? "1" : "2" ) << std::endl;
 
-	uint64_t result{ 0u };
+	std::string result;
 
 	auto ProcessAllLines = [ this ]( const AoC::TestLines& lines ) -> void
 	{
@@ -67,7 +67,7 @@ AoC::Result::InternalExecute( const AoC::TestLines& lines, bool isPartOne )
 			m_isPartOne ? ProcessOne( line ) : ProcessTwo( line );
 	};
 
-	auto PrepareResult = [ this ]( uint64_t& result ) -> void
+	auto PrepareResult = [ this ](std::string& result ) -> void
 	{
 		result = m_isPartOne ? this->FinishPartOne( ) : this->FinishPartTwo( );
 	};
@@ -97,9 +97,9 @@ AoC::Result::InternalExecute( const AoC::TestLines& lines, bool isPartOne )
 }
 
 int
-AoC::Result::CheckResult( const uint64_t computed, const uint64_t expected ) const
+AoC::Result::CheckResult( const std::string& computed, const std::string& expected ) const
 {
-	if( computed )
+	if( false == computed.empty( ) )
 	{
 		if( expected != computed )
 		{

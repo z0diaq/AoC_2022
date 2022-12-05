@@ -19,10 +19,10 @@ export namespace calorie_counting
 		virtual void Init( ) override;
 
 		virtual void ProcessOne( const std::string& data ) override;
-		virtual uint64_t FinishPartOne( ) override;
+		virtual std::string FinishPartOne( ) override;
 
 		virtual void ProcessTwo( const std::string& data ) override;
-		virtual uint64_t FinishPartTwo( ) override;
+		virtual std::string FinishPartTwo( ) override;
 
 		virtual void Teardown( ) override;
 
@@ -68,18 +68,18 @@ Result::ProcessGeneral( const std::string& data )
 		m_caloriesSumsPerElf.push_back( 0u );
 }
 
-uint64_t
+std::string
 Result::FinishPartOne( )
 {
 	std::sort( m_caloriesSumsPerElf.begin( ), m_caloriesSumsPerElf.end( ) );
-	return m_caloriesSumsPerElf.back( );
+	return std::to_string( m_caloriesSumsPerElf.back( ) );
 }
 
-uint64_t
+std::string
 Result::FinishPartTwo( )
 {
 	std::sort( m_caloriesSumsPerElf.begin( ), m_caloriesSumsPerElf.end( ) );
 	size_t count = m_caloriesSumsPerElf.size( );
 
-	return m_caloriesSumsPerElf[ count - 1 ] + m_caloriesSumsPerElf[ count - 2 ] + m_caloriesSumsPerElf[ count - 3 ];
+	return std::to_string( m_caloriesSumsPerElf[ count - 1 ] + m_caloriesSumsPerElf[ count - 2 ] + m_caloriesSumsPerElf[ count - 3 ] );
 }

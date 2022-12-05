@@ -18,9 +18,9 @@ export namespace camp_cleanup
 	protected:
 		virtual void Init( ) override { m_result = 0; }
 		virtual void ProcessOne( const std::string& data ) override;
-		virtual uint64_t FinishPartOne( ) override { return m_result; }
+		virtual std::string FinishPartOne( ) override { return std::to_string( m_result ); }
 		virtual void ProcessTwo( const std::string& data ) override;
-		virtual uint64_t FinishPartTwo( ) override { return m_result; }
+		virtual std::string FinishPartTwo( ) override { return std::to_string( m_result ); }
 
 	private:
 		uint64_t m_result;

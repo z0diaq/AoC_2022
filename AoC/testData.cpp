@@ -23,8 +23,8 @@ TestData::Load( const std::string& filename, const std::string& dataTag )
 		try
 		{
 			boost::split( m_data, Normalize( ReadFileContents( path ) ), boost::is_any_of( "\n" ) );
-			m_expectedResultPart1 = boost::lexical_cast< uint64_t >( ReadFileContents( GetPathVariant( path, DataType::RESULT_PART_1 ) ) );
-			m_expectedResultPart2 = boost::lexical_cast< uint64_t >( ReadFileContents( GetPathVariant( path, DataType::RESULT_PART_2 ) ) );
+			m_expectedResultPart1 = ReadFileContents( GetPathVariant( path, DataType::RESULT_PART_1 ) );
+			m_expectedResultPart2 = ReadFileContents( GetPathVariant( path, DataType::RESULT_PART_2 ) );
 		}
 		catch( std::exception& e )
 		{

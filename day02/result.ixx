@@ -27,9 +27,9 @@ export namespace rock_paper_scissors
 	protected:
 		virtual void Init( ) override;
 		virtual void ProcessOne( const std::string& data ) { ProcessGeneral( data ); }
-		virtual uint64_t FinishPartOne( ) override { return FinishGeneral( ); }
+		virtual std::string FinishPartOne( ) override { return FinishGeneral( ); }
 		virtual void ProcessTwo( const std::string& data ) { ProcessGeneral( data ); }
-		virtual uint64_t FinishPartTwo( ) override { return FinishGeneral( ); }
+		virtual std::string FinishPartTwo( ) override { return FinishGeneral( ); }
 		virtual void Teardown( ) override { }
 
 	private:
@@ -38,7 +38,7 @@ export namespace rock_paper_scissors
 		uint32_t             m_totalPoints;
 
 		void ProcessGeneral( const std::string& data );
-		uint64_t FinishGeneral( ) const;
+		std::string FinishGeneral( ) const;
 
 		Guide DecodeGuide( const Guide& guide ) const;
 		uint32_t ComputeScore( const Guide& guiide ) const;

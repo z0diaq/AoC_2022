@@ -1,6 +1,24 @@
 import aoc_template;
 
+//leave what is needed
+#include <iostream>
 #include <string>
+#include <algorithm>
+#include <stdexcept>
+
+//containers
+#include <vector>
+#include <map>
+#include <set>
+#include <deque>
+#include <array>
+
+//boost
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/replace.hpp>
+
 
 using namespace aoc_template;
 
@@ -27,15 +45,14 @@ void
 Result::Teardown( )
 {
 }
-
-uint64_t
+std::string
 Result::FinishPartOne( )
 {
-	return 0;
+	return std::to_string( 0 );
 }
 
-uint64_t
+std::string
 Result::FinishPartTwo( )
 {
-	return 0;
+	return std::to_string( 0 );
 }

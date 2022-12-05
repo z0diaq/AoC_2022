@@ -1,6 +1,7 @@
 import rock_paper_scissors;
 
 #include <stdexcept>
+#include <string>
 
 using namespace rock_paper_scissors;
 
@@ -23,10 +24,10 @@ Result::ProcessGeneral( const std::string& data )
 	m_totalPoints += ComputeScore( DecodeGuide( { data[ 0 ], data[ 2 ] } ) );
 }
 
-uint64_t
+std::string
 Result::FinishGeneral( ) const
 {
-	return m_totalPoints;
+	return std::to_string( m_totalPoints );
 }
 
 Guide
