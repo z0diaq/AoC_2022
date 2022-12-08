@@ -19,40 +19,21 @@ import aoc_template;
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
-
 using namespace aoc_template;
 
-Result::Result( )
+Result::Result()
 {
+
 }
 
 void
-Result::Init( )
+Result::Init()
 {
+
 }
 
 void
-Result::ProcessOne( const std::string& data )
+Result::Teardown()
 {
-}
 
-void
-Result::ProcessTwo( const std::string& data )
-{
-}
-
-void
-Result::Teardown( )
-{
-}
-std::string
-Result::FinishPartOne( )
-{
-	return std::to_string( 0 );
-}
-
-std::string
-Result::FinishPartTwo( )
-{
-	return std::to_string( 0 );
 }
