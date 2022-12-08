@@ -14,17 +14,17 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="data">
-      <UniqueIdentifier>{259dcd6f-577f-437e-9f52-5eea98e744e5}</UniqueIdentifier>
+      <UniqueIdentifier>{b0a24a12-5399-4ed8-8a2f-688f911ff05b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="result.ixx">
+    <ClCompile Include="part1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="part1.cpp">
+    <ClCompile Include="result.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="part2.cpp">
@@ -44,21 +44,5 @@
     <Text Include="sample_input_a_result_part2.txt">
       <Filter>data</Filter>
     </Text>
-    <Text Include="sample_input_b.txt">
-      <Filter>data</Filter>
-    </Text>
-    <Text Include="sample_input_b_result_part1.txt">
-      <Filter>data</Filter>
-    </Text>
-    <Text Include="sample_input_b_result_part2.txt">
-      <Filter>data</Filter>
-    </Text>
-    <Text Include="sample_input_c.txt">
-      <Filter>data</Filter>
-    </Text>
-    <Text Include="sample_input_c_result_part1.txt">
-      <Filter>data</Filter>
-    </Text>
-    <Text Include="readme_setup.txt" />
   </ItemGroup>
 </Project>
