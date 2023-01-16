@@ -29,5 +29,5 @@ Result::ProcessTwo(const std::string& data)
 std::string
 Result::FinishPartTwo()
 {
-	return std::to_string(0);
+	return "";
 }

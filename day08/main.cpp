@@ -4,5 +4,5 @@ import treetop_tree_house;
 
 int main( int argc, char* argv[ ] )
 {
-	auto resultPart1 = treetop_tree_house::Result( ).Execute( argc, argv );
+	return treetop_tree_house::Result( ).Execute( argc, argv );
 }

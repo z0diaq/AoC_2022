@@ -4,5 +4,5 @@ import rope_bridge;
 
 int main( int argc, char* argv[ ] )
 {
-	auto resultPart1 = rope_bridge::Result( ).Execute( argc, argv );
+	return rope_bridge::Result( ).Execute( argc, argv );
 }

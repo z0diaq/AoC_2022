@@ -4,5 +4,5 @@ import no_space;
 
 int main( int argc, char* argv[ ] )
 {
-	auto resultPart1 = no_space::Result( ).Execute( argc, argv );
+	return no_space::Result( ).Execute( argc, argv );
 }

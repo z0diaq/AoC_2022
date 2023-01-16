@@ -33,7 +33,7 @@ Result::FinishGeneral( ) const
 Guide
 Result::DecodeGuide( const Guide& guide ) const
 {
-	char decodedResponse;
+	char decodedResponse{ 0 };
 	if( IsPartOne( ) )
 	{
 		switch( guide.m_ourMove )

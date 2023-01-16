@@ -10,7 +10,7 @@ static const std::string FILENAME_TEST_A( "sample_input_a.txt" );
 static const std::string FILENAME_TEST_B( "sample_input_b.txt" );
 static const std::string FILENAME_TEST_C( "sample_input_c.txt" );
 
-bool
+int
 AoC::Result::Execute( int argc, char* argv[ ] )
 {
 	if( argc >= 1 )
@@ -20,16 +20,23 @@ AoC::Result::Execute( int argc, char* argv[ ] )
 	}
 
 	// process all known files - abort on first computation failure
-	return
-		ProcessFileIfExists( FILENAME_TEST_A ) &&
-		ProcessFileIfExists( FILENAME_TEST_B ) &&
-		ProcessFileIfExists( FILENAME_TEST_C ) &&
-		ProcessFileIfExists( FILENAME );
+	if( ProcessFileIfExists( FILENAME_TEST_A, true ) &&
+		ProcessFileIfExists( FILENAME_TEST_B, true ) &&
+		ProcessFileIfExists( FILENAME_TEST_C, true ) &&
+		ProcessFileIfExists( FILENAME, false ) )
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
 bool
-AoC::Result::ProcessFileIfExists( const std::string& filename )
+AoC::Result::ProcessFileIfExists( const std::string& filename, const bool isTestData )
 {
+	m_isTestData = isTestData;
 	TestData data;
 	m_dataLoadingSec = Measure( &TestData::Load, data, filename, m_dataTag );
 
@@ -43,10 +50,13 @@ AoC::Result::ProcessFileIfExists( const std::string& filename )
 
 	for( int partNo = 1; partNo <= 2; ++partNo )
 	{
-		PerformanceSummaryTrigger trigger( this );
-		if( FAILED == CheckResult( InternalExecute( data.Data( ), partNo == 1 ),
-								   partNo == 1 ? data.ExpectedResultPart1( ) : data.ExpectedResultPart2( ) ) )
-			return false;
+		//for( int i = 0; i != 10; ++i )
+		{
+			PerformanceSummaryTrigger trigger( this );
+			if( FAILED == CheckResult( InternalExecute( data.Data( ), partNo == 1 ),
+				partNo == 1 ? data.ExpectedResultPart1( ) : data.ExpectedResultPart2( ) ) )
+				return false;
+		}
 	}
 
 	return true;

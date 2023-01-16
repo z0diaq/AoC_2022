@@ -29,5 +29,5 @@ Result::ProcessOne( const std::string& data )
 std::string
 Result::FinishPartOne( )
 {
-	return std::to_string( 0 );
+	return "";
 }

@@ -4,5 +4,5 @@ import supply_stack;
 
 int main( int argc, char* argv[ ] )
 {
-	auto resultPart1 = supply_stack::Result( ).Execute( argc, argv );
+	return supply_stack::Result( ).Execute( argc, argv );
 }

@@ -34,13 +34,14 @@ export namespace AoC
 		Result( ) = default;
 		virtual ~Result( ) = default;
 
-		virtual bool Execute( int argc, char* argv[ ] );
+		virtual int Execute( int argc, char* argv[ ] );
 
 
 	protected:
 
 		bool IsPartOne( ) const { return m_isPartOne; }
 		bool IsPartTwo( ) const { return false == m_isPartOne; }
+		bool IsTestData( ) const { return m_isTestData; }
 
 		virtual void Init( ) { };
 
@@ -55,13 +56,14 @@ export namespace AoC
 		virtual void Teardown( ) { };
 
 	private:
-		bool        m_isPartOne;
+		bool        m_isPartOne = true;
+		bool        m_isTestData = false;
 		std::string m_dataTag;//taken for application name - ie. 'day01', used for searching for data
-		double      m_dataLoadingSec;
-		double      m_dataProcessingSec;
-		double      m_resultPrepareSec;
+		double      m_dataLoadingSec = 0.;
+		double      m_dataProcessingSec = 0.;
+		double      m_resultPrepareSec = 0.;
 
-		bool ProcessFileIfExists( const std::string& filename );
+		bool ProcessFileIfExists( const std::string& filename, const bool isTestData );
 		std::string InternalExecute( const TestLines& lines, bool isPartOne );
 		int CheckResult(
 			const std::string& computed,

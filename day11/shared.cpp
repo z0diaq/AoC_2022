@@ -36,7 +36,7 @@ Result::FinishCommon( unsigned int iterations )
 	for( unsigned int monkeyNo = 0; monkeyNo != m_monkeys.size( ); ++monkeyNo )
 		inspectsPerMonkey[ monkeyNo ] = m_monkeys[ monkeyNo ].PerformedInspects( );
 
-	std::ranges::sort( inspectsPerMonkey );
+	std::sort( inspectsPerMonkey.begin( ), inspectsPerMonkey.end( ) );
 	std::cout << *( inspectsPerMonkey.end( ) - 1 ) << " " << *( inspectsPerMonkey.end( ) - 2 ) << std::endl;
 	return std::to_string( *( inspectsPerMonkey.end( ) - 1 ) * *( inspectsPerMonkey.end( ) - 2 ) );
 }
