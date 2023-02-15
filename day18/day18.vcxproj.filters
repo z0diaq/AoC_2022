@@ -13,5 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{db75e193-48b3-45a5-a20d-0096c2bfd4e2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="part1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="part2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="result.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shared.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="sample_input_a.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_a_result_part1.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_a_result_part2.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_b.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_b_result_part1.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="sample_input_b_result_part2.txt">
+      <Filter>data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
