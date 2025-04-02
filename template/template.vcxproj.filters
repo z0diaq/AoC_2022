@@ -18,23 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="result.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="part1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="part2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="sample_input_a.txt">
       <Filter>data</Filter>
     </Text>
@@ -60,5 +43,22 @@
       <Filter>data</Filter>
     </Text>
     <Text Include="readme_setup.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="aoc_template.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="result.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="types.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@ module;
 export module not_enough_minerals;
 import :types;
 import :blueprint;
+export import :robot_cost;
 
 export namespace not_enough_minerals
 {

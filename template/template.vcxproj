@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(MY_LIBS)\boost_1_80_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(MY_LIBS)\boost_1_87_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(MY_LIBS)\boost_1_80_0;$(IncludePath)</IncludePath>
+    <IncludePath>$(MY_LIBS)\boost_1_87_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,13 +137,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="part1.cpp" />
-    <ClCompile Include="result.ixx" />
-    <ClCompile Include="part2.cpp" />
-    <ClCompile Include="shared.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="readme_setup.txt" />
     <Text Include="sample_input_a.txt" />
     <Text Include="sample_input_a_result_part1.txt" />
@@ -158,6 +151,13 @@
     <ProjectReference Include="..\AoC\AoC.vcxproj">
       <Project>{c42e5183-12fa-4908-9e4a-740192cf506a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="aoc_template.ixx" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="result.ixx" />
+    <ClCompile Include="solver.ixx" />
+    <ClCompile Include="types.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
