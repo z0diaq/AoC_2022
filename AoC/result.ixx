@@ -13,6 +13,13 @@ export constexpr int FAILED = 0;
 
 export namespace AoC
 {
+	enum class FileProcessingResult
+	{
+		InputFileNotFound,
+		ResultMatching,
+		ResultNotMatching
+	};
+
 	class Result
 	{
 		struct PerformanceSummaryTrigger
@@ -34,14 +41,13 @@ export namespace AoC
 		Result( ) = default;
 		virtual ~Result( ) = default;
 
-		virtual int Execute( int argc, char* argv[ ] );
+		virtual bool Execute( int argc, char* argv[ ] );
 
 
 	protected:
 
 		bool IsPartOne( ) const { return m_isPartOne; }
 		bool IsPartTwo( ) const { return false == m_isPartOne; }
-		bool IsTestData( ) const { return m_isTestData; }
 
 		virtual void Init( ) { };
 
@@ -56,14 +62,13 @@ export namespace AoC
 		virtual void Teardown( ) { };
 
 	private:
-		bool        m_isPartOne = true;
-		bool        m_isTestData = false;
+		bool        m_isPartOne;
 		std::string m_dataTag;//taken for application name - ie. 'day01', used for searching for data
-		double      m_dataLoadingSec = 0.;
-		double      m_dataProcessingSec = 0.;
-		double      m_resultPrepareSec = 0.;
+		double      m_dataLoadingSec;
+		double      m_dataProcessingSec;
+		double      m_resultPrepareSec;
 
-		bool ProcessFileIfExists( const std::string& filename, const bool isTestData );
+		FileProcessingResult ProcessFileIfExists( const std::string& filename );
 		std::string InternalExecute( const TestLines& lines, bool isPartOne );
 		int CheckResult(
 			const std::string& computed,
@@ -75,7 +80,7 @@ export namespace AoC
 			//copied from: https://stackoverflow.com/a/50891840
 
 			auto start{ std::chrono::steady_clock::now( ) };
-				std::invoke( std::forward<Function>( toTime ), std::forward<Args>( a )... );
+			std::invoke( std::forward<Function>( toTime ), std::forward<Args>( a )... );
 			auto stop{ std::chrono::steady_clock::now( ) };
 
 			return std::chrono::duration_cast< std::chrono::duration< double > >( stop - start ).count( );

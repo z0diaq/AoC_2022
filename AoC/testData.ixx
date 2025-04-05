@@ -19,9 +19,10 @@ export namespace AoC
 	public:
 		void Load( const std::string& filename, const std::string& dataTag );
 
-		operator bool( )const
+		operator bool( ) const
 		{
-			return false == m_data.empty( );
+			return false == m_data.empty( ) &&
+				m_data.front( ) != "UPDATE_ME_WITH_SAMPLE_DATA";
 		}
 
 		const TestLines& Data( ) const
@@ -30,13 +31,13 @@ export namespace AoC
 		}
 
 		const std::string&
-		ExpectedResultPart1( ) const
+			ExpectedResultPart1( ) const
 		{
 			return m_expectedResultPart1;
 		}
 
 		const std::string&
-		ExpectedResultPart2( ) const
+			ExpectedResultPart2( ) const
 		{
 			return m_expectedResultPart2;
 		}

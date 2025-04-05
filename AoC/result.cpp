@@ -2,15 +2,14 @@ import AoC;
 
 #include <iostream>
 #include <filesystem>
+#include <vector>
 
 namespace fs = std::filesystem;
 
 static const std::string FILENAME( "input.txt" );
-static const std::string FILENAME_TEST_A( "sample_input_a.txt" );
-static const std::string FILENAME_TEST_B( "sample_input_b.txt" );
-static const std::string FILENAME_TEST_C( "sample_input_c.txt" );
+static const std::string FILENAME_TEST_TEMPLATE( "sample_input_REV.txt" );
 
-int
+bool
 AoC::Result::Execute( int argc, char* argv[ ] )
 {
 	if( argc >= 1 )
@@ -19,47 +18,53 @@ AoC::Result::Execute( int argc, char* argv[ ] )
 		std::cout << "DEBUG: tag: [" << m_dataTag << "]" << std::endl;
 	}
 
-	// process all known files - abort on first computation failure
-	if( ProcessFileIfExists( FILENAME_TEST_A, true ) &&
-		ProcessFileIfExists( FILENAME_TEST_B, true ) &&
-		ProcessFileIfExists( FILENAME_TEST_C, true ) &&
-		ProcessFileIfExists( FILENAME, false ) )
+	std::vector< FileProcessingResult> results{};
+
+	results.push_back( ProcessFileIfExists( FILENAME ) );
+
+	auto pos = FILENAME_TEST_TEMPLATE.find( "REV" );
+	if( pos != std::string::npos )
 	{
-		return 0;
+		for( char c = 'a'; c != 'z'; ++c )
+		{
+			std::string filenameTest{ FILENAME_TEST_TEMPLATE };
+			filenameTest.replace( pos, 3, std::string{ c } );
+			results.push_back( ProcessFileIfExists( filenameTest ) );
+			if( results.back( ) == FileProcessingResult::InputFileNotFound )
+				break;
+		}
 	}
-	else
-	{
-		return 1;
-	}
+
+	// are there any failed results ?
+	return std::find_if( results.begin( ), results.end( ), [ ]( FileProcessingResult currentResult ) -> bool
+		{
+			return currentResult == FileProcessingResult::ResultNotMatching;
+		} ) == results.end( );
 }
 
-bool
-AoC::Result::ProcessFileIfExists( const std::string& filename, const bool isTestData )
+AoC::FileProcessingResult
+AoC::Result::ProcessFileIfExists( const std::string& filename )
 {
-	m_isTestData = isTestData;
 	TestData data;
 	m_dataLoadingSec = Measure( &TestData::Load, data, filename, m_dataTag );
 
 	if( false == data )
 	{
 		std::cout << std::endl << "DEBUG: " << filename << " could not be processed" << std::endl;
-		return true;
+		return FileProcessingResult::InputFileNotFound;
 	}
 
 	std::cout << std::endl << "INFO: processing [" << filename << "]..." << std::endl;
 
 	for( int partNo = 1; partNo <= 2; ++partNo )
 	{
-		//for( int i = 0; i != 10; ++i )
-		{
-			PerformanceSummaryTrigger trigger( this );
-			if( FAILED == CheckResult( InternalExecute( data.Data( ), partNo == 1 ),
-				partNo == 1 ? data.ExpectedResultPart1( ) : data.ExpectedResultPart2( ) ) )
-				return false;
-		}
+		PerformanceSummaryTrigger trigger( this );
+		if( FAILED == CheckResult( InternalExecute( data.Data( ), partNo == 1 ),
+			partNo == 1 ? data.ExpectedResultPart1( ) : data.ExpectedResultPart2( ) ) )
+			return FileProcessingResult::ResultNotMatching;
 	}
 
-	return true;
+	return FileProcessingResult::ResultMatching;
 };
 
 std::string
@@ -71,16 +76,16 @@ AoC::Result::InternalExecute( const AoC::TestLines& lines, bool isPartOne )
 
 	std::string result;
 
-	auto ProcessAllLines = [ this ]( const AoC::TestLines& lines ) -> void
-	{
-		for( const auto& line : lines )
-			m_isPartOne ? ProcessOne( line ) : ProcessTwo( line );
-	};
+	auto ProcessAllLines = [this]( const AoC::TestLines& lines ) -> void
+		{
+			for( const auto& line : lines )
+				m_isPartOne ? ProcessOne( line ) : ProcessTwo( line );
+		};
 
-	auto PrepareResult = [ this ](std::string& result ) -> void
-	{
-		result = m_isPartOne ? this->FinishPartOne( ) : this->FinishPartTwo( );
-	};
+	auto PrepareResult = [this]( std::string& result ) -> void
+		{
+			result = m_isPartOne ? this->FinishPartOne( ) : this->FinishPartTwo( );
+		};
 
 	try
 	{
