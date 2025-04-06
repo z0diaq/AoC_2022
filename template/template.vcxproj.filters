@@ -60,5 +60,8 @@
     <ClCompile Include="types.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tests.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

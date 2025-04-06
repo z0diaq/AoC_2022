@@ -157,6 +157,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="result.ixx" />
     <ClCompile Include="solver.ixx" />
+    <ClCompile Include="tests.ixx" />
     <ClCompile Include="types.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,6 +1,6 @@
 import aoc_template;
 
-#include <gtest/gtest.h>
+import <gtest/gtest.h>;
 
 int main( int argc, char* argv[ ] )
 {
