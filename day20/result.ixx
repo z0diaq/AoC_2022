@@ -23,6 +23,9 @@ export namespace grove_positioning_system
 		static Values
 		Mix( const Values& _initialValues );
 
+		static int64_t
+		GetCoordinates( const Values& _mixedValues );
+
 	protected:
 		virtual void Init( ) override
 		{
