@@ -17,11 +17,64 @@ namespace grove_positioning_system
 			EXPECT_EQ( Result::Parse( "-1", 0 ), ( Value{ -1, 0 } ) );
 			EXPECT_EQ( Result::Parse( "12345", 67 ), ( Value{ 12345, 67 } ) );
 			EXPECT_EQ( Result::Parse( std::to_string( std::numeric_limits<int>::min( ) ), 99 ),
-			           ( Value{ std::numeric_limits<int>::min( ), 99 } ) );
+				( Value{ std::numeric_limits<int>::min( ), 99 } ) );
 			EXPECT_EQ( Result::Parse( std::to_string( std::numeric_limits<int>::max( ) ), 66 ),
-			           ( Value{ std::numeric_limits<int>::max( ), 66 } ) );
+				( Value{ std::numeric_limits<int>::max( ), 66 } ) );
 		}
 
-		// TODO: add UTs for Result::Mix( )
+		TEST( Mix, BasicMixTest )
+		{
+			// Example from AoC
+			Values initialValues =
+			{
+				Value{1, 0},
+				Value{2, 1},
+				Value{-3, 2},
+				Value{3, 3},
+				Value{-2, 4},
+				Value{0, 5},
+				Value{4, 6}
+			};
+
+			Values expectedMixedValues =
+			{
+				Value{1, 0},
+				Value{2, 1},
+				Value{-3, 2},
+				Value{4, 6},
+				Value{0, 5},
+				Value{3, 3},
+				Value{-2, 4}
+			};
+
+			Values mixedValues = Result::Mix( initialValues );
+
+			ASSERT_EQ( mixedValues.size( ), expectedMixedValues.size( ) );
+
+			for( size_t i = 0; i < mixedValues.size( ); ++i )
+				EXPECT_EQ( mixedValues[ i ].m_value, expectedMixedValues[ i ].m_value );
+		}
+
+		TEST( Mix, LargeValuesTest )
+		{
+			Values initialValues = {
+				Value{1000, 0},
+				Value{-1000, 1},
+				Value{1, 2},
+				Value{0, 3},
+				Value{-1, 4},
+				Value{500, 5},
+				Value{-500, 6}
+			};
+
+			Values mixedValues = Result::Mix( initialValues );
+
+			auto zeroIt = std::find_if( mixedValues.begin( ), mixedValues.end( ),
+				[ ]( const Value& value ) { return value.m_value == 0; } );
+			ASSERT_NE( zeroIt, mixedValues.end( ) );
+
+			int64_t coordinates = Result::GetCoordinates( mixedValues );
+			EXPECT_NE( coordinates, 0 );
+		}
 	}
 }

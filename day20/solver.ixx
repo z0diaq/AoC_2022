@@ -54,19 +54,25 @@ Result::Mix( const Values& _initialValues )
 			} );
 
 		if( it == mixedValues.end( ) )
-			continue;
+			throw std::logic_error( "Item not found!" );
 
-		size_t currentPos = std::distance( mixedValues.begin( ), it );
+		int64_t currentPos = std::distance( mixedValues.begin( ), it );
 		int64_t value = it->m_value;
 
 		auto copy = *it;
 		mixedValues.erase( it );
 
-		int64_t move = value % static_cast< int64_t >( size - 1 );
-		int64_t newPos = ( currentPos + move ) % static_cast< int64_t >( size - 1 );
+		int64_t move;
+		if( value != 0 && value % static_cast< int64_t >( size - 1 ) == 0 )
+			move = 0;
+		else
+			move = value % static_cast< int64_t >( size - 1 );
 
+		int64_t newPos = ( currentPos + move ) % static_cast< int64_t >( size - 1 );
 		if( newPos < 0 )
 			newPos += ( size - 1 );
+		if( newPos == 0 && move != 0 )
+			newPos = size - 1;
 
 		mixedValues.insert( mixedValues.begin( ) + newPos, copy );
 	}
@@ -99,9 +105,6 @@ Result::GetCoordinates( const Values& _mixedValues )
 		size_t pos = ( zeroPos + ( i + 1 ) * 1000 ) % size;
 		coordinates[ i ] = _mixedValues[ pos ].m_value;
 	}
-
-	std::cout << "Values at positions 1000, 2000, 3000 after 0: "
-		<< coordinates[ 0 ] << ", " << coordinates[ 1 ] << ", " << coordinates[ 2 ] << std::endl;
 
 	return std::accumulate( coordinates.begin( ), coordinates.end( ), static_cast< int64_t >( 0 ) );
 }
