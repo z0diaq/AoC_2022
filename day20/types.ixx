@@ -8,7 +8,7 @@ export namespace grove_positioning_system
 	//module wide types go here
 	struct Value
 	{
-		int m_value;
+		std::int64_t m_value;
 		size_t m_position;
 
 		[[nodiscard]] bool operator==( const Value& _rhs ) const

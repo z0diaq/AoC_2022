@@ -8,8 +8,10 @@ import <string_view>;
 import <iostream>;
 import <array>;
 import <numeric>;
+import <ranges>;
 
 using namespace grove_positioning_system;
+constexpr std::int64_t DECRYPTION_KEY = 811589153;
 
 void
 Result::ProcessOne( const std::string& data )
@@ -26,12 +28,17 @@ Result::FinishPartOne( )
 void
 Result::ProcessTwo( const std::string& data )
 {
+	ProcessOne( data );
+	m_values.back( ).m_value *= DECRYPTION_KEY;
 }
 
 std::string
 Result::FinishPartTwo( )
 {
-	return std::to_string( 0 );
+	auto copy = m_values;
+	for( int i : std::ranges::iota_view{ 0, 10 } )
+		copy = Mix( copy );
+	return std::to_string( GetCoordinates( copy ) );
 }
 
 Value
@@ -62,10 +69,8 @@ Result::Mix( const Values& _initialValues )
 		auto copy = *it;
 		mixedValues.erase( it );
 
-		int64_t move;
-		if( value != 0 && value % static_cast< int64_t >( size - 1 ) == 0 )
-			move = 0;
-		else
+		int64_t move{ 0 };
+		if( value )
 			move = value % static_cast< int64_t >( size - 1 );
 
 		int64_t newPos = ( currentPos + move ) % static_cast< int64_t >( size - 1 );
