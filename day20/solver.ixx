@@ -11,7 +11,7 @@ import <numeric>;
 import <ranges>;
 
 using namespace grove_positioning_system;
-constexpr std::int64_t DECRYPTION_KEY = 811589153;
+std::int64_t DECRYPTION_KEY = 811589153;
 
 void
 Result::ProcessOne( const std::string& data )
@@ -50,10 +50,10 @@ Result::Parse( std::string_view _data, const size_t _rowNumber )
 Values
 Result::Mix( const Values& _initialValues )
 {
-	const size_t size = _initialValues.size( );
+	const int64_t size = static_cast<int64_t>(_initialValues.size( ));
 	Values mixedValues = _initialValues;
 
-	for( size_t originalIndex = 0; originalIndex < size; ++originalIndex )
+	for( int64_t originalIndex = 0; originalIndex != size; ++originalIndex )
 	{
 		auto it = std::find_if( mixedValues.begin( ), mixedValues.end( ),
 			[originalIndex]( const Value& _value ) {
@@ -71,9 +71,9 @@ Result::Mix( const Values& _initialValues )
 
 		int64_t move{ 0 };
 		if( value )
-			move = value % static_cast< int64_t >( size - 1 );
+			move = value % ( size - 1 );
 
-		int64_t newPos = ( currentPos + move ) % static_cast< int64_t >( size - 1 );
+		int64_t newPos = ( currentPos + move ) % ( size - 1 );
 		if( newPos < 0 )
 			newPos += ( size - 1 );
 		if( newPos == 0 && move != 0 )

@@ -13,10 +13,6 @@ export namespace grove_positioning_system
 	{
 
 	public:
-		Result( )
-		{
-		}
-
 		static Value
 		Parse( std::string_view _data, const size_t _rowNumber );
 
@@ -27,9 +23,6 @@ export namespace grove_positioning_system
 		GetCoordinates( const Values& _mixedValues );
 
 	protected:
-		virtual void Init( ) override
-		{
-		}
 
 		virtual void ProcessOne( const std::string& data ) override;
 		virtual std::string FinishPartOne( ) override;
@@ -39,10 +32,10 @@ export namespace grove_positioning_system
 
 		virtual void Teardown( ) override
 		{
+			m_values.clear( );
 		}
 
 	private:
-		//data
 		Values m_values;
 	};
 }

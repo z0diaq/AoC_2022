@@ -8,6 +8,8 @@ import <limits>;
 
 import <gtest/gtest.h>;
 
+extern std::int64_t DECRYPTION_KEY;
+
 namespace grove_positioning_system
 {
 	namespace tests
@@ -56,6 +58,40 @@ namespace grove_positioning_system
 				EXPECT_EQ( mixedValues[ i ].m_value, expectedMixedValues[ i ].m_value );
 		}
 
+		TEST( Mix, LargeValuesMixTest )
+		{
+			// Example from AoC
+			Values initialValues =
+			{
+				Value{1 * DECRYPTION_KEY, 0},
+				Value{2 * DECRYPTION_KEY, 1},
+				Value{-3 * DECRYPTION_KEY, 2},
+				Value{3 * DECRYPTION_KEY, 3},
+				Value{-2 * DECRYPTION_KEY, 4},
+				Value{0 * DECRYPTION_KEY, 5},
+				Value{4 * DECRYPTION_KEY, 6}
+			};
+
+			Values expectedMixedValues =
+			{
+				Value{0 * DECRYPTION_KEY, 5},
+				Value{-3 * DECRYPTION_KEY, 2},
+				Value{4 * DECRYPTION_KEY, 6},
+				Value{-2 * DECRYPTION_KEY, 4},
+				Value{3 * DECRYPTION_KEY, 3},
+				Value{2 * DECRYPTION_KEY, 1},
+				Value{1 * DECRYPTION_KEY, 0},
+			};
+
+			Values mixedValues = Result::Mix( initialValues );
+
+			// Compare the values in the lists
+			ASSERT_EQ( mixedValues.size( ), expectedMixedValues.size( ) );
+
+			for( size_t i = 0; i < mixedValues.size( ); ++i )
+				EXPECT_EQ( mixedValues[ i ].m_value, expectedMixedValues[ i ].m_value );
+		}
+
 		TEST( Mix, EdgeCasesTest )
 		{
 			// Test with values that are multiples of (size-1)
@@ -73,8 +109,8 @@ namespace grove_positioning_system
 
 			Values expectedMixedValues =
 			{
-				Value{1, 0},
 				Value{6, 1},
+				Value{1, 0},
 				Value{3, 2},
 				Value{-9, 6},
 				Value{-6, 5},
