@@ -6,6 +6,7 @@ import AoC;
 
 import <string>;
 import <unordered_map>;
+import <optional>;
 
 export namespace monkey_math
 {
@@ -16,6 +17,10 @@ export namespace monkey_math
 		Result( )
 		{
 		}
+
+		static std::optional<std::pair<std::string, std::string> >
+			ProcessLine( const std::string& _line );
+
 
 	protected:
 		virtual void Init( ) override
@@ -34,6 +39,6 @@ export namespace monkey_math
 
 	private:
 		//data
-		std::unordered_map<std::string, std::string> m_monkeys;
+		MonkeyMath m_monkeys;
 	};
 }

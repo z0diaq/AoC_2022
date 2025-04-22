@@ -6,5 +6,5 @@ import <unordered_map>;
 export namespace monkey_math
 {
 	//module wide types go here
-using MonkeyMath = std::unordered_map<std::string, std::string>;
+	using MonkeyMath = std::unordered_map<std::string, std::string>;
 }

@@ -11,7 +11,7 @@ import <iostream>;
 using namespace monkey_math;
 
 std::optional<std::pair<std::string, std::string> >
-ProcessLine( const std::string& _line )
+Result::ProcessLine( const std::string& _line )
 {
 	if( _line.length( ) < 7 )
 		return std::nullopt;
