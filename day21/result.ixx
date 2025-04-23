@@ -21,6 +21,7 @@ export namespace monkey_math
 		static std::optional<std::pair<std::string, std::string> >
 			ProcessLine( const std::string& _line );
 
+		static std::int64_t Evaluate( const MonkeyMath& _monkeys, const std::string& _name );
 
 	protected:
 		virtual void Init( ) override
