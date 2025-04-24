@@ -45,11 +45,60 @@ Result::FinishPartOne( )
 void
 Result::ProcessTwo( const std::string& data )
 {
+	ProcessOne( data );
 }
 
 std::string
 Result::FinishPartTwo( )
 {
+	std::int64_t low = 0, high = std::numeric_limits<std::int64_t>::max();
+	MonkeyMath monkeys = m_monkeys;
+
+	const auto it = monkeys.find( "root" );
+	if( it == monkeys.end( ) )
+	{
+		std::cout << "Monkey [root] is not in the map!" << std::endl;
+		throw std::logic_error( "No root!" );
+	}
+	const std::string& operation = it->second;
+
+	if( operation.empty( ) )
+	{
+		std::cerr << "Monkey [root] has empty operation!" << std::endl;
+		throw std::logic_error( "Empty operation line detected!" );
+	}
+
+	std::vector<std::string> parts;
+	boost::split( parts, operation, boost::is_any_of( " " ) );
+
+	if( parts.size( ) != 3 )
+	{
+		std::cerr << "Operation [" << operation << "] expected to have 3 parts but have " << parts.size( ) << std::endl;
+		throw std::logic_error( "Operation has invalid number of parts!" );
+	}
+	if( parts[ 1 ].length( ) != 1 )
+	{
+		std::cerr << "Operator [" << parts[ 1 ] << "] expected to be of 1-length but is " << parts[ 1 ].length( ) << std::endl;
+		throw std::logic_error( "Invalid operator!" );
+	}
+
+	const std::string left = parts[ 0 ];
+	const std::string right = parts[ 2 ];
+
+	while( low <= high )
+	{
+		std::int64_t mid = ( low + high ) / 2;
+		monkeys[ "humn" ] = std::to_string( mid );
+		auto lhs = Evaluate( monkeys, left );
+		auto rhs = Evaluate( monkeys, right );
+
+		if( lhs == rhs )
+			return std::to_string( mid );
+		else if( lhs < rhs )
+			low = mid + 1;
+		else
+			high = mid - 1;
+	}
 	return std::to_string( 0 );
 }
 

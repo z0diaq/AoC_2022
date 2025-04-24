@@ -146,6 +146,11 @@
       <Project>{c42e5183-12fa-4908-9e4a-740192cf506a}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="sample_input_a.txt" />
+    <Text Include="sample_input_a_result_part1.txt" />
+    <Text Include="sample_input_a_result_part2.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

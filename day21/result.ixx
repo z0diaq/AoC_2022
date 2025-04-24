@@ -36,6 +36,7 @@ export namespace monkey_math
 
 		virtual void Teardown( ) override
 		{
+			m_monkeys.clear( );
 		}
 
 	private:
