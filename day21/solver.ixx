@@ -85,6 +85,21 @@ Result::FinishPartTwo( )
 	const std::string left = parts[ 0 ];
 	const std::string right = parts[ 2 ];
 
+	bool increasing{ false };
+	{
+		MonkeyMath temp = m_monkeys;
+
+		temp[ "humn" ] = "1";
+		auto base_lhs = Evaluate( temp, left );
+		auto base_rhs = Evaluate( temp, right );
+		auto base_diff = base_lhs - base_rhs;
+
+		temp[ "humn" ] = "2";
+		auto next_diff = Evaluate( temp, left ) - Evaluate( temp, right );
+
+		increasing = next_diff > base_diff;
+	}
+
 	while( low <= high )
 	{
 		std::int64_t mid = ( low + high ) / 2;
