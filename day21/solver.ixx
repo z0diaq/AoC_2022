@@ -7,6 +7,7 @@ import <string>;
 import <optional>;
 import <stdexcept>;
 import <iostream>;
+import <deque>;
 
 import <boost/algorithm/string/split.hpp>;
 import <boost/algorithm/string/classification.hpp>;
@@ -99,6 +100,7 @@ Result::FinishPartTwo( )
 
 		increasing = next_diff > base_diff;
 	}
+	std::deque<std::int64_t> lastLows, lastHighs;
 
 	while( low <= high )
 	{
@@ -107,13 +109,40 @@ Result::FinishPartTwo( )
 		auto lhs = Evaluate( monkeys, left );
 		auto rhs = Evaluate( monkeys, right );
 
-		if( lhs == rhs )
+		auto diff = lhs - rhs;
+		if( diff == 0 )
 			return std::to_string( mid );
-		else if( lhs < rhs )
+		//else if( ( diff < 0 ) == increasing )
+		else if( diff < 0 )
+		{
 			low = mid + 1;
+			lastLows.push_back( low );
+			while( lastLows.size( ) > 10 )
+				lastLows.pop_front( );
+		}
 		else
+		{
 			high = mid - 1;
+			lastHighs.push_back( high );
+			while( lastHighs.size( ) > 10 )
+				lastHighs.pop_front( );
+		}
 	}
+	std::cerr << "Failed to find matching value!" << std::endl;
+	std::cerr << "Trying with range " << lastLows.front( ) << " to " << lastHighs.back( ) << std::endl;
+
+	for( std::int64_t humn = lastLows.front( ); humn != lastHighs.back( ); ++humn )
+	{
+		monkeys[ "humn" ] = std::to_string( humn );
+		auto lhs = Evaluate( monkeys, left );
+		auto rhs = Evaluate( monkeys, right );
+
+		auto diff = lhs - rhs;
+		if( diff == 0 )
+			return std::to_string( humn );
+	}
+
+	std::cerr << "Failed to find matching value!" << std::endl;
 	return std::to_string( 0 );
 }
 
