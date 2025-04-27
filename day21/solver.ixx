@@ -86,60 +86,38 @@ Result::FinishPartTwo( )
 	const std::string left = parts[ 0 ];
 	const std::string right = parts[ 2 ];
 
-	bool increasing{ false };
+	MonkeyMath temp = m_monkeys;
+	
+
+	std::int64_t leftValue = Evaluate( temp, left ),
+		rightValue = Evaluate( temp, right );
+
+	std::int64_t error = std::abs( leftValue - rightValue );
+	std::int64_t previousError = error;
+
+	std::int64_t humnValue = std::atoll( temp[ "humn" ].c_str( ) );
+	std::int64_t previousNumber = humnValue;
+
+	constexpr double rate = 0.1;
+
+	while( true )
 	{
-		MonkeyMath temp = m_monkeys;
-
-		temp[ "humn" ] = "1";
-		auto base_lhs = Evaluate( temp, left );
-		auto base_rhs = Evaluate( temp, right );
-		auto base_diff = base_lhs - base_rhs;
-
-		temp[ "humn" ] = "2";
-		auto next_diff = Evaluate( temp, left ) - Evaluate( temp, right );
-
-		increasing = next_diff > base_diff;
-	}
-	std::deque<std::int64_t> lastLows, lastHighs;
-
-	while( low <= high )
-	{
-		std::int64_t mid = ( low + high ) / 2;
-		monkeys[ "humn" ] = std::to_string( mid );
-		auto lhs = Evaluate( monkeys, left );
-		auto rhs = Evaluate( monkeys, right );
-
-		auto diff = lhs - rhs;
-		if( diff == 0 )
-			return std::to_string( mid );
-		//else if( ( diff < 0 ) == increasing )
-		else if( diff < 0 )
-		{
-			low = mid + 1;
-			lastLows.push_back( low );
-			while( lastLows.size( ) > 10 )
-				lastLows.pop_front( );
-		}
+		if( leftValue == rightValue )
+			return std::to_string(humnValue );
+		double direction;
+		if( error != previousError )
+			direction = ( double )( humnValue - previousNumber ) / ( error - previousError );
 		else
-		{
-			high = mid - 1;
-			lastHighs.push_back( high );
-			while( lastHighs.size( ) > 10 )
-				lastHighs.pop_front( );
-		}
-	}
-	std::cerr << "Failed to find matching value!" << std::endl;
-	std::cerr << "Trying with range " << lastLows.front( ) << " to " << lastHighs.back( ) << std::endl;
+			direction = ( error < previousError ) ? 1.0 : -1.0;
+		previousNumber = humnValue;
+		previousError = error;
 
-	for( std::int64_t humn = lastLows.front( ); humn != lastHighs.back( ); ++humn )
-	{
-		monkeys[ "humn" ] = std::to_string( humn );
-		auto lhs = Evaluate( monkeys, left );
-		auto rhs = Evaluate( monkeys, right );
+		humnValue -= ( std::int64_t )( rate * error * direction );
+		temp[ "humn" ] = std::to_string( humnValue );
 
-		auto diff = lhs - rhs;
-		if( diff == 0 )
-			return std::to_string( humn );
+		leftValue = Evaluate( temp, left );
+		rightValue = Evaluate( temp, right );
+		error = std::abs( leftValue - rightValue );
 	}
 
 	std::cerr << "Failed to find matching value!" << std::endl;
