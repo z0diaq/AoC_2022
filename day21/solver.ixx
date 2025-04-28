@@ -26,7 +26,7 @@ Result::ProcessLine( const std::string& _line )
 		throw std::runtime_error( "Line is not a valid operation" );
 	}
 
-	return std::make_pair( _line.substr( 0, pos ), _line.substr( pos + 2 ));
+	return std::make_pair( _line.substr( 0, pos ), _line.substr( pos + 2 ) );
 }
 
 void
@@ -52,7 +52,7 @@ Result::ProcessTwo( const std::string& data )
 std::string
 Result::FinishPartTwo( )
 {
-	std::int64_t low = 0, high = std::numeric_limits<std::int64_t>::max();
+	std::int64_t low = 0, high = std::numeric_limits<std::int64_t>::max( );
 	MonkeyMath monkeys = m_monkeys;
 
 	const auto it = monkeys.find( "root" );
@@ -83,45 +83,130 @@ Result::FinishPartTwo( )
 		throw std::logic_error( "Invalid operator!" );
 	}
 
-	const std::string left = parts[ 0 ];
-	const std::string right = parts[ 2 ];
+	const std::string leftMonkey = parts[ 0 ];
+	const std::string rightMonkey = parts[ 2 ];
 
-	MonkeyMath temp = m_monkeys;
-	
+	// - First value is the coefficient of x (humn)
+	// - Second value is the constant
+	// This allows to represent linear equations of the form: coef*x + constant
+	using Equation = std::pair<double, double>;
 
-	std::int64_t leftValue = Evaluate( temp, left ),
-		rightValue = Evaluate( temp, right );
+	// Forward declare so can be used inside
+	std::function<Equation( const std::string& )> EvaluateEquation;
 
-	std::int64_t error = std::abs( leftValue - rightValue );
-	std::int64_t previousError = error;
+	EvaluateEquation = [&]( const std::string& name ) -> Equation {
+		// If this is the "humn" node, it's our variable x with coefficient 1 and constant 0
+		if( name == "humn" )
+			return { 1.0, 0.0 }; // 1*x + 0
 
-	std::int64_t humnValue = std::atoll( temp[ "humn" ].c_str( ) );
-	std::int64_t previousNumber = humnValue;
+		const auto it = monkeys.find( name );
+		if( it == monkeys.end( ) )
+			throw std::logic_error( "Unknown monkey: " + name );
 
-	constexpr double rate = 0.1;
+		const std::string& operation = it->second;
 
-	while( true )
+		if( operation.empty( ) )
+			throw std::logic_error( "Empty operation for monkey: " + name );
+
+		// If it's a number, return a constant expression (coefficient of x is 0)
+		if( std::isdigit( operation.front( ) ) || operation.front( ) == '-' )
+		{
+			double value = std::stod( operation );
+			return { 0.0, value }; // 0*x + value
+		}
+
+		// Otherwise, parse the operation
+		std::vector<std::string> parts;
+		boost::split( parts, operation, boost::is_any_of( " " ) );
+
+		if( parts.size( ) != 3 )
+			throw std::logic_error( "Operation has invalid number of parts: " + operation );
+
+		// Evaluate both sides of the operation
+		Equation lhs = EvaluateEquation( parts[ 0 ] );
+		Equation rhs = EvaluateEquation( parts[ 2 ] );
+
+		// Combine the equations based on the operation
+		switch( parts[ 1 ][ 0 ] )
+		{
+		case '+':
+			// (a*x + b) + (c*x + d) = (a+c)*x + (b+d)
+			return { lhs.first + rhs.first, lhs.second + rhs.second };
+		case '-':
+			// (a*x + b) - (c*x + d) = (a-c)*x + (b-d)
+			return { lhs.first - rhs.first, lhs.second - rhs.second };
+		case '*':
+		{
+			// This is trickier. If we have linear equations, we need to distribute:
+			// (a*x + b) * (c*x + d)
+			// For simplicity, we'll assume one side has no x term (as in the example),
+			// or we'd get a quadratic equation which is beyond the scope
+			if( lhs.first != 0.0 && rhs.first != 0.0 )
+				throw std::logic_error( "Multiplication of two expressions both containing x is not supported" );
+
+			// If lhs has x: (a*x + b) * (0*x + d) = (a*d)*x + (b*d)
+			if( lhs.first != 0.0 )
+				return { lhs.first * rhs.second, lhs.second * rhs.second };
+
+			// If rhs has x: (0*x + b) * (c*x + d) = (b*c)*x + (b*d)
+			if( rhs.first != 0.0 )
+				return { lhs.second * rhs.first, lhs.second * rhs.second };
+
+			// If neither has x, it's just a constant
+			return { 0.0, lhs.second * rhs.second };
+		}
+		case '/':
+		{
+			// Similar to multiplication, this is complex, but simplified with assumptions
+			// We'll assume right side has no x term (as in the example)
+			if( rhs.first != 0.0 )
+				throw std::logic_error( "Division where the divisor contains x is not supported" );
+
+			// (a*x + b) / (0*x + d) = (a/d)*x + (b/d)
+			return { lhs.first / rhs.second, lhs.second / rhs.second };
+		}
+		default:
+			throw std::logic_error( "Unhandled operator: " + parts[ 1 ] );
+		}
+		};
+
+	// Evaluate both sides of the root equation
+	Equation leftSide = EvaluateEquation( leftMonkey );
+	Equation rightSide = EvaluateEquation( rightMonkey );
+
+	std::cout << "Left side: " << leftSide.first << "*x + " << leftSide.second << std::endl;
+	std::cout << "Right side: " << rightSide.first << "*x + " << rightSide.second << std::endl;
+
+	// Now we need to solve the equation: leftSide = rightSide
+	// If leftSide = a*x + b and rightSide = c*x + d
+	// Then a*x + b = c*x + d
+	// (a-c)*x = d-b
+	// x = (d-b)/(a-c)
+
+	double coeffDiff = leftSide.first - rightSide.first;
+	double constDiff = rightSide.second - leftSide.second;
+
+	if( std::abs( coeffDiff ) < 1e-10 )
 	{
-		if( leftValue == rightValue )
-			return std::to_string(humnValue );
-		double direction;
-		if( error != previousError )
-			direction = ( double )( humnValue - previousNumber ) / ( error - previousError );
+		// Coefficient difference is effectively zero
+		if( std::abs( constDiff ) < 1e-10 )
+		{
+			// Both sides are equal, any value of x works
+			return "Any value works";
+		}
 		else
-			direction = ( error < previousError ) ? 1.0 : -1.0;
-		previousNumber = humnValue;
-		previousError = error;
-
-		humnValue -= ( std::int64_t )( rate * error * direction );
-		temp[ "humn" ] = std::to_string( humnValue );
-
-		leftValue = Evaluate( temp, left );
-		rightValue = Evaluate( temp, right );
-		error = std::abs( leftValue - rightValue );
+		{
+			// No solution exists
+			return "No solution exists";
+		}
 	}
 
-	std::cerr << "Failed to find matching value!" << std::endl;
-	return std::to_string( 0 );
+	// Calculate x = (d-b)/(a-c)
+	double xValue = constDiff / coeffDiff;
+
+	const std::int64_t result = static_cast< std::int64_t >( std::round( xValue ) );
+
+	return std::to_string( result );
 }
 
 std::int64_t
@@ -147,7 +232,7 @@ Result::Evaluate( const MonkeyMath& _monkeys, const std::string& _name )
 	std::vector<std::string> parts;
 	boost::split( parts, operation, boost::is_any_of( " " ) );
 
-	if( parts.size( ) != 3  )
+	if( parts.size( ) != 3 )
 	{
 		std::cerr << "Operation [" << operation << "] expected to have 3 parts but have " << parts.size( ) << std::endl;
 		throw std::logic_error( "Operation has invalid number of parts!" );
@@ -159,7 +244,7 @@ Result::Evaluate( const MonkeyMath& _monkeys, const std::string& _name )
 	}
 
 	std::int64_t lhs = Evaluate( _monkeys, parts[ 0 ] ),
-	             rhs = Evaluate( _monkeys, parts[ 2 ] );
+		rhs = Evaluate( _monkeys, parts[ 2 ] );
 
 	switch( parts[ 1 ][ 0 ] )
 	{
