@@ -8,8 +8,14 @@ import <string>;
 
 export namespace monkey_map
 {
+	namespace tests
+	{
+		class AnalyzeMapTest;
+	}
+
 	class Result : public AoC::Result
 	{
+		friend class tests::AnalyzeMapTest;
 
 	public:
 		Result( )
@@ -31,11 +37,18 @@ export namespace monkey_map
 		{
 			m_map.clear( );
 			m_pathToFollow.clear( );
+
+			m_rowsContinuations.clear( );
+			m_columnsContinuations.clear( );
 		}
 
+		static std::tuple<Continuations, Continuations>
+		AnalyzeMap( const BoardMap& _map );
+
 	private:
-		//data
 		BoardMap m_map;
 		std::string m_pathToFollow;
+		Continuations m_rowsContinuations;
+		Continuations m_columnsContinuations;
 	};
 }
