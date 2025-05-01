@@ -31,7 +31,7 @@ Result::ProcessOne( const std::string& data )
 std::string
 Result::FinishPartOne( )
 {
-	auto[m_columnsContinuations, m_rowsContinuations] = AnalyzeMap( m_map );
+	auto [m_columnsContinuations, m_rowsContinuations] = AnalyzeMap( m_map );
 
 	return std::to_string( 0 );
 }
@@ -63,22 +63,26 @@ Result::AnalyzeMap( const BoardMap& _map )
 	for( int row{ 0 }; row != maxRow; ++row )
 	{
 		const std::string scanLine{ _map.at( row ) };
-		if( scanLine.length( ) != mapWidth )
-		{
-			std::cerr << "First row has length of " << mapWidth << " while current has length of " << scanLine.length( ) << std::endl;
-			std::cerr << "Line: [" << row << "]" << std::endl;
-			throw std::logic_error( "Map is not consistent!" );
-		}
+		while( columnsContinuations.size( ) < scanLine.length( ) )
+			columnsContinuations.push_back( { maxRow, 0 } );
 
-		for( int column{ 0 }; column != maxColumn; ++column )
+		for( size_t column{ 0 }; column != scanLine.length( ); ++column )
 		{
-			if( scanLine[ column ] != ' ' )
+			switch( scanLine[ column ] )
 			{
+			case '.':
+			case '#':
 				columnsContinuations[ column ].first = std::min( columnsContinuations[ column ].first, row );
 				columnsContinuations[ column ].second = std::max( columnsContinuations[ column ].second, row );
 
-				rowsContinuations[ row ].first = std::min( rowsContinuations[ row ].first, column );
-				rowsContinuations[ row ].second = std::max( rowsContinuations[ row ].second, column );
+				rowsContinuations[ row ].first = std::min( rowsContinuations[ row ].first, (int)column );
+				rowsContinuations[ row ].second = std::max( rowsContinuations[ row ].second, (int)column );
+				break;
+			case ' ':
+				continue;
+			default:
+				std::cerr << "Scanline [" << scanLine << "]" << std::endl;
+				throw std::logic_error( "Data has invalid character(s)!" );
 			}
 		}
 	}
