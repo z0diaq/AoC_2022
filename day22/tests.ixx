@@ -214,5 +214,278 @@ namespace monkey_map
 			EXPECT_EQ( rowsContinuations[ 8 ].first, 8 );   // Row 8 starts at column 8
 			EXPECT_EQ( rowsContinuations[ 8 ].second, 15 ); // Row 8 ends at column 15
 		}
+
+		// Tests for GetActions method
+
+		class GetActionsTest : public ::testing::Test
+		{
+		protected:
+			Actions CallGetActions( const std::string& path )
+			{
+				return Result::GetActions( path );
+			}
+
+			bool IsNumber( const Action& action )
+			{
+				return std::holds_alternative<int>( action );
+			}
+
+			bool IsTurn( const Action& action )
+			{
+				return std::holds_alternative<Turn>( action );
+			}
+
+			int GetNumber( const Action& action )
+			{
+				return std::get<int>( action );
+			}
+
+			Turn GetTurn( const Action& action )
+			{
+				return std::get<Turn>( action );
+			}
+		};
+
+		TEST_F( GetActionsTest, EmptyPathReturnsEmptyActions )
+		{
+			Actions actions = CallGetActions( "" );
+			EXPECT_TRUE( actions.empty( ) );
+		}
+
+		TEST_F( GetActionsTest, SingleDigitNumber )
+		{
+			Actions actions = CallGetActions( "5" );
+			ASSERT_EQ( actions.size( ), 1 );
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 5 );
+		}
+
+		TEST_F( GetActionsTest, MultiDigitNumber )
+		{
+			Actions actions = CallGetActions( "123" );
+			ASSERT_EQ( actions.size( ), 1 );
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 123 );
+		}
+
+		TEST_F( GetActionsTest, SingleLeftTurn )
+		{
+			Actions actions = CallGetActions( "L" );
+			ASSERT_EQ( actions.size( ), 1 );
+			EXPECT_TRUE( IsTurn( actions[ 0 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 0 ] ), Turn::Left );
+		}
+
+		TEST_F( GetActionsTest, SingleRightTurn )
+		{
+			Actions actions = CallGetActions( "R" );
+			ASSERT_EQ( actions.size( ), 1 );
+			EXPECT_TRUE( IsTurn( actions[ 0 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 0 ] ), Turn::Right );
+		}
+
+		TEST_F( GetActionsTest, NumberFollowedByLeftTurn )
+		{
+			Actions actions = CallGetActions( "10L" );
+			ASSERT_EQ( actions.size( ), 2 );
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 10 );
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Left );
+		}
+
+		TEST_F( GetActionsTest, NumberFollowedByRightTurn )
+		{
+			Actions actions = CallGetActions( "42R" );
+			ASSERT_EQ( actions.size( ), 2 );
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 42 );
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Right );
+		}
+
+		TEST_F( GetActionsTest, TurnFollowedByNumber )
+		{
+			Actions actions = CallGetActions( "L7" );
+			ASSERT_EQ( actions.size( ), 2 );
+			EXPECT_TRUE( IsTurn( actions[ 0 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 0 ] ), Turn::Left );
+			EXPECT_TRUE( IsNumber( actions[ 1 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 1 ] ), 7 );
+		}
+
+		TEST_F( GetActionsTest, ComplexPath )
+		{
+			Actions actions = CallGetActions( "10R5L5R10L4R5L5" );
+			ASSERT_EQ( actions.size( ), 13 );
+
+			// Check first few elements
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 10 );
+
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 2 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 2 ] ), 5 );
+
+			EXPECT_TRUE( IsTurn( actions[ 3 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 3 ] ), Turn::Left );
+
+			// Check last few elements
+			EXPECT_TRUE( IsNumber( actions[ 10 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 10 ] ), 5 );
+
+			EXPECT_TRUE( IsTurn( actions[ 11 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 11 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 12 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 12 ] ), 5 );
+		}
+
+
+		TEST_F( GetActionsTest, MultipleNumbers )
+		{
+			// This is testing a case that shouldn't occur in valid input
+			// since numbers should be separated by turns, but it's good to test
+			// the parser behavior
+			Actions actions = CallGetActions( "123L456" );
+			ASSERT_EQ( actions.size( ), 3 );
+
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 123 );
+
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 2 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 2 ] ), 456 );
+		}
+
+		TEST_F( GetActionsTest, EndsWithNumber )
+		{
+			Actions actions = CallGetActions( "R10L20" );
+			ASSERT_EQ( actions.size( ), 4 );
+
+			EXPECT_TRUE( IsTurn( actions[ 0 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 0 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 1 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 1 ] ), 10 );
+
+			EXPECT_TRUE( IsTurn( actions[ 2 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 2 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 3 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 3 ] ), 20 );
+		}
+
+		TEST_F( GetActionsTest, EndsWithTurn )
+		{
+			Actions actions = CallGetActions( "10L5R" );
+			ASSERT_EQ( actions.size( ), 4 );
+
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 10 );
+
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 2 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 2 ] ), 5 );
+
+			EXPECT_TRUE( IsTurn( actions[ 3 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 3 ] ), Turn::Right );
+		}
+
+		TEST_F( GetActionsTest, LargeNumbers )
+		{
+			Actions actions = CallGetActions( "12345L67890R12345" );
+			ASSERT_EQ( actions.size( ), 5 );
+
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 12345 );
+
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 2 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 2 ] ), 67890 );
+
+			EXPECT_TRUE( IsTurn( actions[ 3 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 3 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 4 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 4 ] ), 12345 );
+		}
+
+		TEST_F( GetActionsTest, AdventOfCodeExample )
+		{
+			// Example from the problem statement
+			Actions actions = CallGetActions( "10R5L5R10L4R5L5" );
+			ASSERT_EQ( actions.size( ), 13 );
+
+			// Check the sequence matches the expected pattern
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 10 );
+
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 2 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 2 ] ), 5 );
+
+			EXPECT_TRUE( IsTurn( actions[ 3 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 3 ] ), Turn::Left );
+
+			// Continue checking...
+			EXPECT_TRUE( IsNumber( actions[ 4 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 4 ] ), 5 );
+
+			EXPECT_TRUE( IsTurn( actions[ 5 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 5 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 6 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 6 ] ), 10 );
+
+			EXPECT_TRUE( IsTurn( actions[ 7 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 7 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 8 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 8 ] ), 4 );
+
+			EXPECT_TRUE( IsTurn( actions[ 9 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 9 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 10 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 10 ] ), 5 );
+
+			EXPECT_TRUE( IsTurn( actions[ 11 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 11 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 12 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 12 ] ), 5 );
+		}
+
+		TEST_F( GetActionsTest, ZeroMoves )
+		{
+			Actions actions = CallGetActions( "0R0L0" );
+			ASSERT_EQ( actions.size( ), 5 );
+
+			EXPECT_TRUE( IsNumber( actions[ 0 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 0 ] ), 0 );
+
+			EXPECT_TRUE( IsTurn( actions[ 1 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 1 ] ), Turn::Right );
+
+			EXPECT_TRUE( IsNumber( actions[ 2 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 2 ] ), 0 );
+
+			EXPECT_TRUE( IsTurn( actions[ 3 ] ) );
+			EXPECT_EQ( GetTurn( actions[ 3 ] ), Turn::Left );
+
+			EXPECT_TRUE( IsNumber( actions[ 4 ] ) );
+			EXPECT_EQ( GetNumber( actions[ 4 ] ), 0 );
+		}
 	}
 }

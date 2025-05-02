@@ -28,10 +28,14 @@ Result::ProcessOne( const std::string& data )
 	}
 }
 
+
 std::string
 Result::FinishPartOne( )
 {
 	auto [m_columnsContinuations, m_rowsContinuations] = AnalyzeMap( m_map );
+	Position position( m_rowsContinuations[ 0 ].first, 0 ); // we can use the continuations' data to get initial position
+
+
 
 	return std::to_string( 0 );
 }
@@ -87,4 +91,37 @@ Result::AnalyzeMap( const BoardMap& _map )
 		}
 	}
 	return { columnsContinuations, rowsContinuations };
+}
+
+Actions
+Result::GetActions( const std::string& _pathToFollow )
+{
+	Actions result;
+
+	int number = 0;
+	bool isNumber{ false };
+	for( char c : _pathToFollow )
+	{
+		switch( c )
+		{
+		case 'L':
+		case 'R':
+			if( isNumber )
+				result.push_back( number );
+			result.push_back( Action( c == 'L' ? Turn::Left : Turn::Right ) );
+			isNumber = false;
+			number = 0;
+			break;
+		default: // number
+			isNumber = true;
+			number = 10 * number + ( c - '0' );
+			break;
+		}
+	}
+
+	// handle case when number is last iteam
+	if( isNumber )
+		result.push_back( number );
+
+	return result;
 }

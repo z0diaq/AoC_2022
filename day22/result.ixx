@@ -11,11 +11,13 @@ export namespace monkey_map
 	namespace tests
 	{
 		class AnalyzeMapTest;
+		class GetActionsTest;
 	}
 
 	class Result : public AoC::Result
 	{
 		friend class tests::AnalyzeMapTest;
+		friend class tests::GetActionsTest;
 
 	public:
 		Result( )
@@ -44,6 +46,9 @@ export namespace monkey_map
 
 		static std::tuple<Continuations, Continuations>
 		AnalyzeMap( const BoardMap& _map );
+
+		static Actions
+		GetActions( const std::string& _pathToFollow );
 
 	private:
 		BoardMap m_map;
