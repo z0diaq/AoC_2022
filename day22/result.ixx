@@ -50,6 +50,9 @@ export namespace monkey_map
 		static Actions
 		GetActions( const std::string& _pathToFollow );
 
+		static PositionAndDirection
+		PerformAction( const BoardMap& _map, PositionAndDirection _position, Action _action );
+
 	private:
 		BoardMap m_map;
 		std::string m_pathToFollow;
