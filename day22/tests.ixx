@@ -13,36 +13,36 @@ namespace monkey_map
 {
 	namespace tests
 	{
-		class AnalyzeMapTest : public ::testing::Test
+		class AnalyzeMapDataTest : public ::testing::Test
 		{
 		protected:
-			std::tuple<Continuations, Continuations> CallAnalyzeMap( const BoardMap& map )
+			std::tuple<Continuations, Continuations> CallAnalyzeMapData( const MapData& _mapData )
 			{
-				return Result::AnalyzeMap( map );
+				return Result::AnalyzeMapData( _mapData );
 			}
 		};
 
-		TEST_F( AnalyzeMapTest, EmptyMapThrowsException )
+		TEST_F( AnalyzeMapDataTest, EmptyMapThrowsException )
 		{
-			BoardMap emptyMap;
-			EXPECT_THROW( CallAnalyzeMap( emptyMap ), std::logic_error );
+			MapData emptyMapData;
+			EXPECT_THROW( CallAnalyzeMapData( emptyMapData ), std::logic_error );
 		}
 
-		TEST_F( AnalyzeMapTest, EmptyFirstRowThrowsException )
+		TEST_F( AnalyzeMapDataTest, EmptyFirstRowThrowsException )
 		{
-			BoardMap mapWithEmptyFirstRow = { "" };
-			EXPECT_THROW( CallAnalyzeMap( mapWithEmptyFirstRow ), std::logic_error );
+			MapData mapWithEmptyFirstRow = { "" };
+			EXPECT_THROW( CallAnalyzeMapData( mapWithEmptyFirstRow ), std::logic_error );
 		}
 
-		TEST_F( AnalyzeMapTest, BasicMapNoSpaces )
+		TEST_F( AnalyzeMapDataTest, BasicMapNoSpaces )
 		{
-			BoardMap basicMap = {
+			MapData basicMap = {
 				"...",
 				"...",
 				"..."
 			};
 
-			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMap( basicMap );
+			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMapData( basicMap );
 
 			ASSERT_EQ( columnsContinuations.size( ), 3 );
 			for( int i = 0; i < 3; ++i ) {
@@ -58,15 +58,15 @@ namespace monkey_map
 		}
 
 		// Test map with spaces
-		TEST_F( AnalyzeMapTest, MapWithSpaces )
+		TEST_F( AnalyzeMapDataTest, MapWithSpaces )
 		{
-			BoardMap mapWithSpaces = {
+			MapData mapWithSpaces = {
 				"  ...",
 				" ....",
 				"....."
 			};
 
-			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMap( mapWithSpaces );
+			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMapData( mapWithSpaces );
 
 			// Verify columns continuations
 			ASSERT_EQ( columnsContinuations.size( ), 5 );
@@ -98,15 +98,15 @@ namespace monkey_map
 		}
 
 		// Test asymmetric map
-		TEST_F( AnalyzeMapTest, AsymmetricMap )
+		TEST_F( AnalyzeMapDataTest, AsymmetricMap )
 		{
-			BoardMap asymmetricMap = {
+			MapData asymmetricMap = {
 				" #...",
 				".....",
 				"...#"
 			};
 
-			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMap( asymmetricMap );
+			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMapData( asymmetricMap );
 
 			EXPECT_EQ( columnsContinuations[ 0 ].first, 1 );
 			EXPECT_EQ( columnsContinuations[ 0 ].second, 2 );
@@ -122,21 +122,21 @@ namespace monkey_map
 		}
 
 		// Test map with different characters
-		TEST_F( AnalyzeMapTest, MapWithDifferentCharacters )
+		TEST_F( AnalyzeMapDataTest, MapWithDifferentCharacters )
 		{
-			BoardMap characterMap = {
+			MapData characterMap = {
 				"#.@$%",
 				"&*()!",
 				"12345"
 			};
 
-			EXPECT_THROW( CallAnalyzeMap( characterMap ), std::logic_error );
+			EXPECT_THROW( CallAnalyzeMapData( characterMap ), std::logic_error );
 		}
 
 		// Test map with mixed spaces and non-spaces
-		TEST_F( AnalyzeMapTest, ComplexMixedMap )
+		TEST_F( AnalyzeMapDataTest, ComplexMixedMap )
 		{
-			BoardMap complexMap = {
+			MapData complexMap = {
 				"    #         ",
 				"  #####       ",
 				" #######      ",
@@ -145,7 +145,7 @@ namespace monkey_map
 				"     #        "
 			};
 
-			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMap( complexMap );
+			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMapData( complexMap );
 
 			EXPECT_EQ( columnsContinuations[ 4 ].first, 0 );
 			EXPECT_EQ( columnsContinuations[ 4 ].second, 4 );
@@ -161,15 +161,15 @@ namespace monkey_map
 		}
 
 		// Test extremely large map dimensions
-		TEST_F( AnalyzeMapTest, LargeMapDimensions )
+		TEST_F( AnalyzeMapDataTest, LargeMapDimensions )
 		{
 			const size_t size = 100;
-			BoardMap largeMap( size, std::string( size, '.' ) );
+			MapData largeMap( size, std::string( size, '.' ) );
 
 			largeMap[ 10 ] = std::string( 10, ' ' ) + std::string( size - 10, '.' );
 			largeMap[ 20 ] = std::string( 20, ' ' ) + std::string( size - 20, '.' );
 
-			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMap( largeMap );
+			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMapData( largeMap );
 
 			EXPECT_EQ( columnsContinuations.size( ), size );
 			EXPECT_EQ( rowsContinuations.size( ), size );
@@ -186,9 +186,9 @@ namespace monkey_map
 			EXPECT_EQ( rowsContinuations[ 20 ].second, 99 );
 		}
 
-		TEST_F( AnalyzeMapTest, AdventOfCodeSample )
+		TEST_F( AnalyzeMapDataTest, AdventOfCodeSample )
 		{
-			BoardMap adventSample = {
+			MapData adventSample = {
 				"        ...#",
 				"        .#..",
 				"        #...",
@@ -203,7 +203,7 @@ namespace monkey_map
 				"        ......#."
 			};
 
-			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMap( adventSample );
+			auto [columnsContinuations, rowsContinuations] = CallAnalyzeMapData( adventSample );
 
 			for( int i = 0; i < 8; ++i )
 				EXPECT_EQ( columnsContinuations[ i ].first, 4 );  // These columns start at row 4

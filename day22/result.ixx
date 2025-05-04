@@ -10,13 +10,13 @@ export namespace monkey_map
 {
 	namespace tests
 	{
-		class AnalyzeMapTest;
+		class AnalyzeMapDataTest;
 		class GetActionsTest;
 	}
 
 	class Result : public AoC::Result
 	{
-		friend class tests::AnalyzeMapTest;
+		friend class tests::AnalyzeMapDataTest;
 		friend class tests::GetActionsTest;
 
 	public:
@@ -37,15 +37,14 @@ export namespace monkey_map
 
 		virtual void Teardown( ) override
 		{
-			m_map.clear( );
+			m_map.m_data.clear( );
+			m_map.m_columnsContinuations.clear( );
+			m_map.m_rowsContinuations.clear( );
 			m_pathToFollow.clear( );
-
-			m_rowsContinuations.clear( );
-			m_columnsContinuations.clear( );
 		}
 
 		static std::tuple<Continuations, Continuations>
-		AnalyzeMap( const BoardMap& _map );
+		AnalyzeMapData( const MapData& _mapData );
 
 		static Actions
 		GetActions( const std::string& _pathToFollow );
@@ -56,7 +55,5 @@ export namespace monkey_map
 	private:
 		BoardMap m_map;
 		std::string m_pathToFollow;
-		Continuations m_rowsContinuations;
-		Continuations m_columnsContinuations;
 	};
 }

@@ -20,7 +20,7 @@ Result::ProcessOne( const std::string& data )
 	case '.':
 	case ' ':
 	case '#':
-		m_map.push_back( data );
+		m_map.m_data.push_back( data );
 		break;
 	default:
 		if( false == m_pathToFollow.empty( ) )
@@ -101,11 +101,11 @@ namespace
 std::string
 Result::FinishPartOne( )
 {
-	auto [m_columnsContinuations, m_rowsContinuations] = AnalyzeMap( m_map );
-	PositionAndDirection position{ { m_rowsContinuations[ 0 ].first, 0 }, Direction::Right }; // we can use the continuations' data to get initial position
+	std::tie(m_map.m_columnsContinuations, m_map.m_rowsContinuations) = AnalyzeMapData( m_map.m_data );
+	PositionAndDirection position{ { m_map.m_rowsContinuations[ 0 ].first, 0 }, Direction::Right }; // we can use the continuations' data to get initial position
 	Actions actions = GetActions( m_pathToFollow );
 
-	for( const Action action : actions )
+	for( const Action& action : actions )
 		position = PerformAction( m_map, position, action );
 
 	return std::to_string( 1000 * ( position.m_position.m_row + 1 ) + 4 * ( position.m_position.m_col + 1 ) + DirectionValue( position.m_direction ) );
@@ -123,21 +123,21 @@ Result::FinishPartTwo( )
 }
 
 std::tuple<Continuations, Continuations>
-Result::AnalyzeMap( const BoardMap& _map )
+Result::AnalyzeMapData( const MapData& _mapData )
 {
-	if( _map.empty( ) || _map.front( ).empty( ) )
-		throw std::logic_error( "Map is empty!" );
+	if( _mapData.empty( ) || _mapData.front( ).empty( ) )
+		throw std::logic_error( "Map data is empty!" );
 
 	// assumption - each row has same length
-	const size_t mapWidth{ _map.front( ).length( ) };
-	const size_t mapHeight{ _map.size( ) };
+	const size_t mapWidth{ _mapData.front( ).length( ) };
+	const size_t mapHeight{ _mapData.size( ) };
 	const int maxColumn = static_cast< int >( mapWidth );
 	const int maxRow = static_cast< int >( mapHeight );
-	Continuations rowsContinuations = Continuations( _map.size( ), { maxColumn, 0 } );
+	Continuations rowsContinuations = Continuations( _mapData.size( ), { maxColumn, 0 } );
 	Continuations columnsContinuations = Continuations( mapWidth, { maxRow, 0 } );
 	for( int row{ 0 }; row != maxRow; ++row )
 	{
-		const std::string scanLine{ _map.at( row ) };
+		const std::string scanLine{ _mapData.at( row ) };
 		while( columnsContinuations.size( ) < scanLine.length( ) )
 			columnsContinuations.push_back( { maxRow, 0 } );
 
@@ -205,34 +205,58 @@ Position operator+( const Position& _lhs, const Position& _rhs )
 PositionAndDirection
 Result::PerformAction( const BoardMap& _map, PositionAndDirection _position, Action _action )
 {
-	auto TestPosition = [&_map]( const Position& _position ) -> TestPositionResult
+	auto TestPosition = [&mapData = _map.m_data]( const Position& _position ) -> TestPositionResult
 		{
-			if( _position.m_row < 0 || _position.m_row >= _map.size( ) )
+			if( _position.m_row < 0 || _position.m_row >= mapData.size( ) )
 				return TestPositionResult::OutsideMap;
 
-			// UNDONE
+			const std::string& row = mapData[ _position.m_row ];
+			switch( row.at( _position.m_col ))
+			{
+			case ' ':
+				return TestPositionResult::OutsideMap;
+			case '.':
+				return TestPositionResult::Free;
+			case '#':
+				return TestPositionResult::Blocked;
+			default:
+				throw std::logic_error( "Invalid map!" );
+			}
 		};
 
-
 	if( std::holds_alternative<Turn>( _action ) )
+		_position.m_direction = MakeTurn( std::get<Turn>( _action ), _position.m_direction );
+	else
 	{
-		Turn turn = std::get<Turn>( _action );
-		if( turn == Turn::Right )
-			_position.m_direction = MakeTurn( turn, _position.m_direction );
-		else
+		const Position offset = DirectionToOffset( _position.m_direction );
+		int repeatCount = std::get<int>( _action );
+		const bool isHorizontalMovement = { offset.m_col != 0 };
+		const bool goingLeftOrUp = ( offset.m_col < 0 || offset.m_row < 0 );
+
+		while( repeatCount )
 		{
-			const Position offset = DirectionToOffset( _position.m_direction );
-			const bool isHorizontalMovement = { offset.m_col != 0 };
+			Position candidatePosition = _position.m_position + offset;
+			--repeatCount;
 
-			while( true )
+			switch( TestPosition( candidatePosition ) )
 			{
-				Position candidatePosition = _position.m_position + offset;
-				TestPositionResult testResults = TestPosition( candidatePosition );
+			case TestPositionResult::OutsideMap:
+				// wrap around
+				if( isHorizontalMovement )
+				{
+					if( goingLeftOrUp )
+						;// UNDONE
+				}
 
-				// UNDONE
+			case TestPositionResult::Blocked:
+				// can't continue here
+				repeatCount = 0;
+				continue;
+			case TestPositionResult::Free:
+				_position.m_position = candidatePosition;
+				break;
 			}
 		}
-
 	}
 	return _position;
 }

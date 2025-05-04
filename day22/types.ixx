@@ -8,8 +8,14 @@ import <map>;
 export namespace monkey_map
 {
 	//module wide types go here
-	typedef std::vector<std::string> BoardMap;
+	typedef std::vector<std::string> MapData;
 	typedef std::vector<std::pair<int, int>> Continuations;
+	struct BoardMap
+	{
+		MapData m_data;
+		Continuations m_rowsContinuations;
+		Continuations m_columnsContinuations;
+	};
 	enum class Direction { Right, Down, Left, Up };
 
 	struct Position
