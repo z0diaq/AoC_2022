@@ -51,6 +51,7 @@ namespace
 	{
 		if( _turn == Turn::Right )
 		{
+			std::cout << "TURN RIGHT" << std::endl;
 			switch( _currentDirection )
 			{
 			case Direction::Right:
@@ -65,6 +66,7 @@ namespace
 		}
 		else
 		{
+			std::cout << "TURN LEFT" << std::endl;
 			switch( _currentDirection )
 			{
 			case Direction::Right:
@@ -137,7 +139,7 @@ Result::AnalyzeMapData( const MapData& _mapData )
 	Continuations columnsContinuations = Continuations( mapWidth, { maxRow, 0 } );
 	for( int row{ 0 }; row != maxRow; ++row )
 	{
-		const std::string scanLine{ _mapData.at( row ) };
+		const std::string& scanLine{ _mapData.at( row ) };
 		while( columnsContinuations.size( ) < scanLine.length( ) )
 			columnsContinuations.push_back( { maxRow, 0 } );
 
@@ -229,31 +231,40 @@ Result::PerformAction( const BoardMap& _map, PositionAndDirection _position, Act
 	else
 	{
 		const Position offset = DirectionToOffset( _position.m_direction );
-		int repeatCount = std::get<int>( _action );
-		const bool isHorizontalMovement = { offset.m_col != 0 };
-		const bool goingLeftOrUp = ( offset.m_col < 0 || offset.m_row < 0 );
+		int repeatCount{ std::get<int>( _action )};
+		const bool isHorizontalMovement{ offset.m_col != 0 };
+		const bool goingLeftOrUp{ offset.m_col < 0 || offset.m_row < 0 };
 
+		Position candidatePosition = _position.m_position + offset;
 		while( repeatCount )
 		{
-			Position candidatePosition = _position.m_position + offset;
-			--repeatCount;
-
+			std::cout << "[" << candidatePosition.m_col << ", " << candidatePosition.m_row << "] is ";
 			switch( TestPosition( candidatePosition ) )
 			{
 			case TestPositionResult::OutsideMap:
 				// wrap around
 				if( isHorizontalMovement )
 				{
-					if( goingLeftOrUp )
-						;// UNDONE
+					int newColumn = ( goingLeftOrUp ? _map.m_columnsContinuations[ candidatePosition.m_row ].second : _map.m_columnsContinuations[ candidatePosition.m_row ].first );
+					candidatePosition = { newColumn, candidatePosition.m_row };
 				}
-
+				else
+				{
+					int newRow = ( goingLeftOrUp ? _map.m_rowsContinuations[ candidatePosition.m_col ].second : _map.m_rowsContinuations[ candidatePosition.m_col ].first );
+					candidatePosition = { candidatePosition.m_col, newRow };
+				}
+				std::cout << "OUTSIDE!" << std::endl;
+				break;
 			case TestPositionResult::Blocked:
+				std::cout << "BLOCKED!" << std::endl;
 				// can't continue here
 				repeatCount = 0;
 				continue;
 			case TestPositionResult::Free:
+				std::cout << "FREE!" << std::endl;
 				_position.m_position = candidatePosition;
+				--repeatCount;
+				candidatePosition = candidatePosition + offset;
 				break;
 			}
 		}

@@ -20,9 +20,14 @@ export namespace monkey_map
 
 	struct Position
 	{
-		int m_row;
 		int m_col;
+		int m_row;
 	};
+
+	Position operator+( const Position& _lhs, const Position& _rhs )
+	{
+		return Position{ _lhs.m_col + _rhs.m_col, _lhs.m_row + _rhs.m_row };
+	}
 
 	struct PositionAndDirection
 	{
