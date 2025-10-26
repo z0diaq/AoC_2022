@@ -1,0 +1,11 @@
+"""Day 11: Monkey in the Middle"""
+
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "day11",
+    srcs = glob(["*.cpp", "*.ixx"]),
+    copts = ["-std=c++20"],
+    data = glob(["*.txt"]),
+    deps = ["//AoC:aoc_lib"],
+)

@@ -1,0 +1,24 @@
+"""AoC shared library with common utilities"""
+
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "aoc_lib",
+    srcs = [
+        "result.cpp",
+        "testData.cpp",
+    ],
+    hdrs = [
+        "fsHelpers.ixx",
+        "result.ixx",
+        "testData.ixx",
+    ],
+    copts = [
+        "-std=c++20",
+    ],
+    linkopts = [
+        "-lboost_filesystem",
+        "-lboost_system",
+    ],
+    visibility = ["//visibility:public"],
+)

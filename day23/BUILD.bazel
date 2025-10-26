@@ -1,0 +1,14 @@
+"""Day 23: Unstable Diffusion"""
+
+# Note: Day 23 not yet implemented
+# Uncomment when source files are added
+
+# load("@rules_cc//cc:defs.bzl", "cc_binary")
+# 
+# cc_binary(
+#     name = "day23",
+#     srcs = glob(["*.cpp", "*.ixx"]),
+#     copts = ["-std=c++20"],
+#     data = glob(["*.txt"], allow_empty = True),
+#     deps = ["//AoC:aoc_lib"],
+# )
