@@ -1,14 +1,16 @@
-import AoC;
+module;
 
+// Include all standard library headers in global module fragment (before importing)
 #include <string>
-#include <filesystem>
 #include <iostream>
-
+#include <exception>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
+module AoC;
+
+// Implementation file - no export needed
 using AoC::TestData;
 
 std::string Normalize( std::string data );

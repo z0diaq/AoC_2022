@@ -2,20 +2,55 @@
 
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
-cc_library(
-    name = "aoc_lib",
+# Workaround: Compile all module and implementation files together in one step
+# This ensures the gcm.cache is shared across all compilation units
+genrule(
+    name = "compile_aoc_objects",
     srcs = [
-        "result.cpp",
-        "testData.cpp",
-    ],
-    hdrs = [
+        "testData.ixx",
         "fsHelpers.ixx",
         "result.ixx",
-        "testData.ixx",
+        "testData.cpp",
+        "result.cpp",
     ],
-    copts = [
-        "-std=c++20",
+    outs = [
+        "testData_ixx.o",
+        "fsHelpers.o",
+        "result_ixx.o",
+        "testData.o",
+        "result.o",
     ],
+    cmd = """
+        set -e
+        # Save current directory (where sources are)
+        SRC_DIR=$$(pwd)
+        # Work in output directory to share gcm.cache
+        OUT_DIR=$$(dirname $(location testData_ixx.o))
+        mkdir -p $$OUT_DIR/gcm.cache
+        cd $$OUT_DIR
+        # Compile module partitions first (order matters!)
+        g++ -x c++ -std=c++20 -fmodules-ts -fPIC -c $$SRC_DIR/$(location testData.ixx) -o testData_ixx.o
+        g++ -x c++ -std=c++20 -fmodules-ts -fPIC -c $$SRC_DIR/$(location fsHelpers.ixx) -o fsHelpers.o
+        # Compile primary module interface (depends on partitions)
+        g++ -x c++ -std=c++20 -fmodules-ts -fPIC -c $$SRC_DIR/$(location result.ixx) -o result_ixx.o
+        # Compile implementation files (import the module)
+        g++ -std=c++20 -fmodules-ts -fPIC -c $$SRC_DIR/$(location testData.cpp) -o testData.o
+        g++ -std=c++20 -fmodules-ts -fPIC -c $$SRC_DIR/$(location result.cpp) -o result.o
+    """,
+)
+
+# Create static library from compiled objects
+genrule(
+    name = "create_aoc_archive",
+    srcs = [":compile_aoc_objects"],
+    outs = ["libaoc.a"],
+    cmd = "ar rcs $(location libaoc.a) $(locations :compile_aoc_objects)",
+)
+
+# Wrap the static library as a cc_library for dependency management
+cc_library(
+    name = "aoc_lib",
+    srcs = [":create_aoc_archive"],
     linkopts = [
         "-lboost_filesystem",
         "-lboost_system",

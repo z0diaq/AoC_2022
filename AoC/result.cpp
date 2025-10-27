@@ -1,9 +1,16 @@
-import AoC;
+module;
 
+// Include all standard library headers in global module fragment
+#include <string>
+#include <vector>
 #include <iostream>
 #include <filesystem>
-#include <vector>
+#include <algorithm>
+#include <iomanip>
 
+module AoC;
+
+// Implementation file - no export needed
 namespace fs = std::filesystem;
 
 static const std::string FILENAME( "input.txt" );

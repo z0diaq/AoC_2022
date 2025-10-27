@@ -2,6 +2,11 @@ module;
 
 #include <vector>
 #include <string>
+#include <iostream>
+#include <exception>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 export module AoC:test_data;
 
