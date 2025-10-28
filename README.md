@@ -8,7 +8,24 @@ more for practicing features from latest standards (i.e. modules from C++20, std
 
 Code comments and solutions improvements are welcomed!
 
-info: tried using cmake and Visual Studio 2022 integration but failed with builds couldn't find modules' definitions - probably could make this work but with much effort... other time then, or if someone could help I'd apprecaite!'
+## Build System
+
+This project uses **CMake with Ninja** for building. C++20 modules are fully supported.
+
+### Quick Start
+
+```bash
+./configure.sh    # Configure the build (Debug by default)
+./build.sh        # Build all targets
+```
+
+For detailed build instructions, see **[BUILD_NINJA.md](BUILD_NINJA.md)**
+
+### Requirements
+- CMake 3.28+
+- Ninja build system
+- C++20 compatible compiler (GCC 11+, Clang 16+, or MSVC 2022)
+- Boost 1.70+
 
 setup instructions in template\\readme_setup.txt
 

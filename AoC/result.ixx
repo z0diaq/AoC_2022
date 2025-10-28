@@ -2,13 +2,6 @@ module;
 
 #include <stdexcept>
 #include <chrono>
-#include <functional>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
-#include <filesystem>
 
 export module AoC;
 
