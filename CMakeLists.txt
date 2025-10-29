@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # C++20 modules are still experimental in CMake
-# Try to enable module support, but fall back to treating .ixx as regular sources
+# GCC module support is limited - we'll use a hybrid approach
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28")
     # Try experimental module support
     set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
@@ -19,7 +19,8 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28")
         # GCC needs -fmodules-ts flag
         add_compile_options(-fmodules-ts)
         
-        # Disable automatic scanning - we'll handle modules manually
+        # GCC 13 doesn't fully support CMake's module scanning
+        # We'll manually manage dependencies via source ordering
         set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
     else()
         # Try automatic scanning for other compilers

@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <chrono>
+#include <functional>
 
 export module AoC;
 
